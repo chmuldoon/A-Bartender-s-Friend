@@ -1,0 +1,9 @@
+//
+
+fetchDrinksByIngredient.map(drink => drink.IdDrink)
+  let output = []
+  for each 
+  Drink by ID => {
+    Object.values(drink).slice(21, 36).filter(ing => ing !== null)
+    output = new Set [...output, ...^]
+  }
