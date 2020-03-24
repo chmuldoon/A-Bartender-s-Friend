@@ -221,8 +221,8 @@ var App = function App(props) {
           }).map(function (ing) {
             return ing.toLowerCase().includes("whisk") ? "Whiskey" : ing.toLowerCase().includes("vodka") ? "Vodka" : ing;
           });
-          drink["ingredients"] = _toConsumableArray(new Set(drinkIngredients));
-          debugger;
+          drink["ingredients"] = _toConsumableArray(new Set(drinkIngredients)); // debugger
+
           drink["rank"] = compare(using, drink["ingredients"]);
         });
         setDrinks(result.drinks.filter(function (drink) {
@@ -251,9 +251,7 @@ var App = function App(props) {
   };
 
   var parseImg = function parseImg(str) {
-    debugger;
-    var input = str.toLowerCase().split(" ").length > 1 ? str.toLowerCase().split(" ").join("%20") : str.toLowerCase();
-    debugger;
+    var input = str.toLowerCase().split(" ").join("%20");
     return "https://www.thecocktaildb.com/images/ingredients/".concat(input, "-Small.png");
   };
 
@@ -331,13 +329,13 @@ var App = function App(props) {
           });
         }
       } else {
-        setUsing([].concat(_toConsumableArray(using), [e.target.textContent]));
-        debugger;
+        setUsing([].concat(_toConsumableArray(using), [e.target.textContent])); // debugger
+
         setSearchTerm("");
 
-        var _prevUsing = [].concat(_toConsumableArray(using), [e.target.textContent]);
+        var _prevUsing = [].concat(_toConsumableArray(using), [e.target.textContent]); // debugger
 
-        debugger;
+
         fetch("https://www.thecocktaildb.com/api/json/v1/".concat(1, "/search.php?s=")).then(function (res) {
           return res.json();
         }).then(function (result) {
@@ -364,30 +362,60 @@ var App = function App(props) {
     className: "topBar"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "barLeft"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "hide-sm"
   }, showSearch && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     className: "searchInput",
     type: "text",
     placeholder: "Search for Ingredients",
     value: searchTerm,
     onChange: handleChange("searchTerm")
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "hide-sm"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     onClick: function onClick() {
       return setShowSearch(!showSearch);
     },
     style: {
       cursor: "pointer"
     },
-    "class": "fas fa-search"
-  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "barCenter"
+    className: "fas fa-search"
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "show-sm"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     "class": "fas fa-cocktail"
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+  }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "hide-sm"
-  }, "A Bartender's Friend")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "barCenter"
+  }, "A Bartender's Friend")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "show-sm"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    className: "searchInput",
+    type: "text",
+    placeholder: "Search for Ingredients",
+    value: searchTerm,
+    onChange: handleChange("searchTerm")
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "barRight"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    "class": "fas fa-bars"
+    className: "fas fa-bars"
+  }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "show-sm"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "sideBar"
+  }, displayed.map(function (drink) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, using.includes(drink.strIngredient1) ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "checkedSearchItem",
+      onClick: handleClick("using")
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      src: parseImg(drink.strIngredient1)
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, drink.strIngredient1.length > 22 ? drink.strIngredient1.slice(0, 22) : drink.strIngredient1)) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "searchItem",
+      onClick: handleClick("using")
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      src: parseImg(drink.strIngredient1)
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, drink.strIngredient1.length > 22 ? drink.strIngredient1.slice(0, 22) : drink.strIngredient1)));
   }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "mainArea"
   }, showSearch && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -502,21 +530,26 @@ var Item = /*#__PURE__*/function (_Component) {
       var adjustedProps = this.props.using.map(function (word) {
         return word.toLowerCase();
       });
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "ingredientsSection"
-      }, drink.ingredients.map(function (ing) {
-        return adjustedProps.includes(ing.toLowerCase()) ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "ingItem",
+      return drink.ingredients.map(function (ing) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "ingredientItem"
+        }, adjustedProps.includes(ing.toLowerCase()) ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "box arrow-right",
           style: {
             backgroundColor: "#4CA64C"
           }
-        }, ing) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "ingItem",
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "ingredientName",
           style: {
-            backgroundColor: "#ff6666"
+            backgroundColor: "grey",
+            color: "white"
           }
-        }, ing);
-      }));
+        }, ing.toUpperCase())) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "box"
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "ingredientName"
+        }, " ", ing.toUpperCase())));
+      });
     }
   }, {
     key: "render",

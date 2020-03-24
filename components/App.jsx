@@ -130,7 +130,7 @@ const App = (props) => {
       }
     }
   }
-  debugger
+  // debugger
   return (
     <MainArea>
       <SideBar>

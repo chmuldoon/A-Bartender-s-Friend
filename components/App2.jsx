@@ -41,7 +41,7 @@ const App = props => {
               );
             drink["ingredients"] = [... new Set(drinkIngredients)]
             
-            debugger
+            // debugger
             drink["rank"] = compare(using, drink["ingredients"] )
           })
           setDrinks(
@@ -65,11 +65,8 @@ const App = props => {
     return count
   }
   const parseImg = str => {
-    debugger
-    let input =  str.toLowerCase().split(" ").length > 1 ?  
-    str.toLowerCase().split(" ").join("%20") :
-    str.toLowerCase()
-    debugger
+    let input = str.toLowerCase().split(" ").join("%20") 
+ 
     
     return `https://www.thecocktaildb.com/images/ingredients/${input}-Small.png`
     
@@ -150,10 +147,10 @@ const App = props => {
         }
       } else {
         setUsing([...using, e.target.textContent]);
-        debugger
+        // debugger
         setSearchTerm("")
         let prevUsing = [...using, e.target.textContent];
-        debugger
+        // debugger
         fetch(`https://www.thecocktaildb.com/api/json/v1/${1}/search.php?s=`)
           .then(res => res.json())
           .then(result => {
@@ -187,29 +184,75 @@ const App = props => {
     <Fragment>
       <div className="topBar">
         <div className="barLeft">
-          {showSearch && (
-            <input
-              className="searchInput"
-              type="text"
-              placeholder="Search for Ingredients"
-              value={searchTerm}
-              onChange={handleChange("searchTerm")}
-            />
-          )}
-          <i
-            onClick={() => setShowSearch(!showSearch)}
-            style={{ cursor: "pointer" }}
-            class="fas fa-search"
-          ></i>
+          <span className="hide-sm">
+            {showSearch && (
+              <input
+                className="searchInput"
+                type="text"
+                placeholder="Search for Ingredients"
+                value={searchTerm}
+                onChange={handleChange("searchTerm")}
+              />
+            )}
+          </span>
+          <span className="hide-sm">
+            <i
+              onClick={() => setShowSearch(!showSearch)}
+              style={{ cursor: "pointer" }}
+              className="fas fa-search"
+            ></i>
+          </span>
+
+          <span className="show-sm">
+            <i class="fas fa-cocktail"></i>
+          </span>
         </div>
-        <div className="barCenter">
-          <i class="fas fa-cocktail"></i>
-          <span className="hide-sm">A Bartender's Friend</span>
-        </div>
+        <span className="hide-sm">
+          <div className="barCenter">A Bartender's Friend</div>
+        </span>
+        <span className="show-sm">
+          <input
+            className="searchInput"
+            type="text"
+            placeholder="Search for Ingredients"
+            value={searchTerm}
+            onChange={handleChange("searchTerm")}
+          />
+        </span>
+
         <div className="barRight">
-          <i class="fas fa-bars"></i>
+          <i className="fas fa-bars"></i>
         </div>
       </div>
+      <span className="show-sm">
+        <div className="sideBar">
+          {displayed.map(drink => {
+            return (
+              <Fragment>
+                {using.includes(drink.strIngredient1) ? (
+                  <div className="checkedSearchItem" onClick={handleClick("using")}>
+                    <img src={parseImg(drink.strIngredient1)} />
+                    <p>
+                      {drink.strIngredient1.length > 22
+                        ? drink.strIngredient1.slice(0, 22)
+                        : drink.strIngredient1}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="searchItem" onClick={handleClick("using")}>
+                    <img src={parseImg(drink.strIngredient1)} />
+                    <p>
+                      {drink.strIngredient1.length > 22
+                        ? drink.strIngredient1.slice(0, 22)
+                        : drink.strIngredient1}
+                    </p>
+                  </div>
+                )}
+              </Fragment>
+            );
+          })}
+        </div>
+      </span>
       <div className="mainArea">
         {showSearch && (
           <div className="sideBar">

@@ -8,26 +8,32 @@ class Item extends Component {
   }
   renderIngredients(drink){
     let adjustedProps = this.props.using.map(word => word.toLowerCase())
-    return (
-      <div className="ingredientsSection">
-        {drink.ingredients.map(ing => {
-          return adjustedProps.includes(
-              ing.toLowerCase()
-            ) ? (
-              <div
-                className="ingItem"
-                style={{ backgroundColor: "#4CA64C" }}
-              >{ing}</div>
-            ) : (
-              <div
-                className="ingItem"
-                style={{ backgroundColor: "#ff6666" }}
-              >{ing}</div>
-            )
+    return drink.ingredients.map(ing => {
+        return (
+          <div className="ingredientItem">
+            {adjustedProps.includes(ing.toLowerCase()) ? (
+              <Fragment>
+                <div
+                  className="box arrow-right"
+                  style={{ backgroundColor: "#4CA64C" }}
+                ></div>
 
-        })}
-      </div>
-    );
+                <div
+                  className="ingredientName"
+                  style={{ backgroundColor: "grey", color: "white" }}
+                >
+                  {ing.toUpperCase()}
+                </div>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <div className="box"></div>
+                <div className="ingredientName"> {ing.toUpperCase()}</div>
+              </Fragment>
+            )}
+          </div>
+        );
+        });
   }
 
   render() {
@@ -44,7 +50,12 @@ class Item extends Component {
             style={{ width: "100%", marginBottom: "10px" }}
             alt=""
           />
-          <p className="drinkTitle" style={{ width: "100%", textAlign: "center" }}>{drink.strDrink}</p>
+          <p
+            className="drinkTitle"
+            style={{ width: "100%", textAlign: "center" }}
+          >
+            {drink.strDrink}
+          </p>
         </div>
         {this.renderIngredients(drink)}
       </div>

@@ -86,10 +86,10 @@ html {
   position: fixed;
   z-index: 5;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   font-size: 2.5rem;
   /* display: flex; */
-  /* justify-content: center; */
+  justify-content: center;
   padding-top: 15px;
 
 
@@ -110,17 +110,26 @@ html {
 
   z-index: 3; */
 }
+.barRight,
 .barLeft {
   display: flex;
-  float: left;
-  margin-left: 20px;
   position: absolute;
   z-index: 3;
+  width: 223px;
+  justify-content: center;
+}
+.barLeft {
+  margin-left: 20px;
+  float: left;
+  left: 0;
+
+
 }
 .barRight {
-  display: flex;
   float: right;
   margin-right: 20px;
+  right: 0;
+
 
 }
 .display {
@@ -136,6 +145,9 @@ html {
   height: 40px;
   border: 1px solid #3d3d3d;
   margin-right: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
+
   padding: 0 10px 0 10px;
   font-size: 15px;
 }
@@ -248,6 +260,46 @@ div.searchItem:hover {
   margin-bottom: 20px;
   background-color: white;
 }
+.ingredientItem{
+  margin-left: 2px;
+  height: 20px;
+  width: 50px;
+  width: 80%;
+  justify-content: center;
+  margin: 0 auto 0 auto;
+}
+.ingredientName {
+  height: 100%;
+  width: 80%;
+  margin-left: 22px;
+  padding: 3px 0 0 5px;
+  background-color: lightgray;
+  border-radius: 2px;
+
+}
+  .box {
+  width: 20px;
+  height: 20px;
+  background-color: #3d3d3d;
+  color: #fff;
+  position: relative;
+  float: left;
+  border-radius: 2px;
+}
+
+
+.box.arrow-right:after {
+  content: " ";
+  position: absolute;
+  right: -5px;
+  top: 5px;
+
+  border-top: 5px solid transparent;
+  border-right: none;
+  border-left: 5px solid #4CA64C;
+  border-bottom: 5px solid transparent;
+}
+
 .ingredientsSection {
   display: grid;
   grid-template-columns: 100px 100px;
@@ -259,20 +311,57 @@ div.searchItem:hover {
     font-weight: 500;
     padding: 0, 10px, 0, 10px;
 }
-@media (max-width: 812px) {
+.show-sm {
+  display: none;
+
+}
+@media (max-width: 700px) {
   #main {
     height: 600px;
   }
+ 
   .hide-sm {
     display: none;
+  }
+  .show-sm {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+
+  }
+  .sideBar {
+    width: 100%
   }
   .topBar {
   font-size: 1.5rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-between
 
   }
-  .barCenter {
+  .barRight,
+  .barLeft {
+    width: auto;
+  }
+  .barLeft {
+
+    /* margin-left: 40%; */
+    position: fixed;
+    z-index: 3;
+  }
+  .ingredientItem{
+    margin-bottom: 2px;
+  }
+
+  .searchInput{
+    float: right;
+  }
+  .checkedSearchItem,
+  .searchItem {
+   height: 40px;
+    width: 100%;
+  }
+  .fa-search {
     float: left;
   }
   .content {
@@ -291,15 +380,19 @@ div.searchItem:hover {
 
   }
   .ingredientsSection {
-    grid-template-columns: 200px 200px;
-    grid-template-rows: 70px 70px 70px 70px 70px;
+    justify-content: center;
+    grid-template-columns: 200px 200px minmax(100px);
+    grid-template-rows: 50px 50px 50px 50px 50px;
   
   }
   .ingredientsSection div {
     border-radius: 30px;
-    font-size: 25px;
-    height: 50px;
-    margin: auto 3px auto 3px;
+    font-size: 15px;
+    height: 70%;
+    line-height: 30px;
+    width: 85%;
+    display: flex;
+    margin: auto 20px auto 20px;
   }
   .drinkTitle {
     font-size: 3rem;
