@@ -9,7 +9,7 @@ class Item extends Component {
   renderIngredients(drink){
     let adjustedProps = this.props.using.map(word => word.toLowerCase())
     return (
-      <IngredientsSection>
+      <div className="ingredientsSection">
         {drink.ingredients.map(ing => {
           return adjustedProps.includes(
               ing.toLowerCase()
@@ -26,7 +26,7 @@ class Item extends Component {
             )
 
         })}
-      </IngredientsSection>
+      </div>
     );
   }
 
@@ -35,9 +35,8 @@ class Item extends Component {
       return null;
     }
     let{drink, using} = this.props;
-    debugger
     return (
-      <DrinkCard>
+      <div className="drinkCard">
         <div>
           {/* <p>{drink.strCategory}</p> */}
           <img
@@ -48,16 +47,11 @@ class Item extends Component {
           <p className="drinkTitle" style={{ width: "100%", textAlign: "center" }}>{drink.strDrink}</p>
         </div>
         {this.renderIngredients(drink)}
-      </DrinkCard>
+      </div>
     );
   }
 }
-export const IngredientsSection = styled.div`
-  display: grid;
-  grid-template-columns: 100px 100px;
-  grid-template-rows: 40px 40px 40px 40px 40px;
 
-`
 export const DrinkCard = styled.div`
 width: 260px;
 height: 530px;

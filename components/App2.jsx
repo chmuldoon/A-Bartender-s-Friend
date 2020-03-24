@@ -3,7 +3,6 @@ import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 import Item from "./Item";
 import styled from "styled-components";
 import UsingList from "./UsingList";
-import { quay } from "../keys";
 const App = props => {
   const mounted = useRef();
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,11 +12,10 @@ const App = props => {
   const [showSearch, setShowSearch] = useState(false)
   const [selectedDrink, setSelectedDrink] = useState(null);
   const [using, setUsing] = useState(["Rum", "Gin", "Water", "Salt", "Ice", "Sugar", "Food Coloring", "Brandy"]);
-
   //attempting to make ingredient search a thing
   useEffect(() => {
     
-    fetch(`https://www.thecocktaildb.com/api/json/v2/${quay}/list.php?i=list`)
+    fetch(`https://www.thecocktaildb.com/api/json/v1/${1}/list.php?i=list`)
       .then(res => res.json())
       .then(result => {
         if (result.drinks === null) {
@@ -26,7 +24,7 @@ const App = props => {
           setIngredients(result.drinks);
         }
       });
-    fetch(`https://www.thecocktaildb.com/api/json/v2/${quay}/search.php?s=`)
+    fetch(`https://www.thecocktaildb.com/api/json/v1/${1}/search.php?s=`)
       .then(res => res.json())
       .then(result => {
         if (result.drinks === null) {
@@ -66,7 +64,16 @@ const App = props => {
     })
     return count
   }
-
+  const parseImg = str => {
+    debugger
+    let input =  str.toLowerCase().split(" ").length > 1 ?  
+    str.toLowerCase().split(" ").join("%20") :
+    str.toLowerCase()
+    debugger
+    
+    return `https://www.thecocktaildb.com/images/ingredients/${input}-Small.png`
+    
+  }
   const allPossibleCombos = list => {
     return list
       .reduce(
@@ -116,7 +123,7 @@ const App = props => {
           setDrinks([]);
         } else {
           fetch(
-            `https://www.thecocktaildb.com/api/json/v2/${quay}/search.php?s=`
+            `https://www.thecocktaildb.com/api/json/v1/${1}/search.php?s=`
           )
             .then(res => res.json()).then(result => {
               result.drinks.forEach(drink => {
@@ -147,7 +154,7 @@ const App = props => {
         setSearchTerm("")
         let prevUsing = [...using, e.target.textContent];
         debugger
-        fetch(`https://www.thecocktaildb.com/api/json/v2/${quay}/search.php?s=`)
+        fetch(`https://www.thecocktaildb.com/api/json/v1/${1}/search.php?s=`)
           .then(res => res.json())
           .then(result => {
               result.drinks.forEach(drink => {
@@ -176,7 +183,6 @@ const App = props => {
       }
     };
   };
-  debugger;
   return (
     <Fragment>
       <div className="topBar">
@@ -204,15 +210,15 @@ const App = props => {
           <i class="fas fa-bars"></i>
         </div>
       </div>
-      <MainArea>
+      <div className="mainArea">
         {showSearch && (
-          <SideBar>
+          <div className="sideBar">
             {displayed.map(drink => {
               return (
                 <Fragment>
                   {using.includes(drink.strIngredient1) ? (
                     <div className="checkedSearchItem">
-                      <img src="https://www.thecocktaildb.com/images/ingredients/gin-Small.png" />
+                      <img src={parseImg(drink.strIngredient1)} />
                       <p onClick={handleClick("using")}>
                         {drink.strIngredient1.length > 22
                           ? drink.strIngredient1.slice(0, 22)
@@ -221,7 +227,7 @@ const App = props => {
                     </div>
                   ) : (
                     <div className="searchItem">
-                      <img src="https://www.thecocktaildb.com/images/ingredients/gin-Small.png" />
+                      <img src={parseImg(drink.strIngredient1)} />
                       <p onClick={handleClick("using")}>
                         {drink.strIngredient1.length > 22
                           ? drink.strIngredient1.slice(0, 22)
@@ -232,9 +238,9 @@ const App = props => {
                 </Fragment>
               );
             })}
-          </SideBar>
+          </div>
         )}
-        <Content>
+        <div className="content">
           <UsingContent>
             <div style={{ width: "100%" }}>
               <p>Your virtual shelf is stocked with:</p>
@@ -253,38 +259,20 @@ const App = props => {
               </div>
             ))}
           </UsingContent>
-          <DrinkSection>
+          <div className="drinkSection">
             {drinks
               .filter(drink => drink.rank !== 0)
               .map(drink => (
                 <Item using={using} key={drink.idDrink} drink={drink} />
               ))}
-          </DrinkSection>
-        </Content>
-      </MainArea>
+          </div>
+        </div>
+      </div>
     </Fragment>
   );
 };
 
 
-const MainArea = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: auto;
-  height: 90%;
-  width: 100%;
-
-`;
-const SideBar = styled.div`
-  margin-top: 35px;
-  overflow-y: scroll;
-  background-color: #c1c1c1;
-  position: absolute;
-  z-index: 3;
-  left: 0;
-  max-height: 900px;
-  width: 259px;
-`;
 export const UsingContent = styled.div`
   width: 80%;
   min-height: 5%;
@@ -299,26 +287,6 @@ export const UsingContent = styled.div`
     color: white;
   }
 `;
-export const DrinkSection = styled.div`
-  width: 90%;
-  // border: 1px solid black;
-  height: 90%;
-  overflow-y: scroll;
-  min-height: 80%;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
 
 
-`
-export const Content = styled.div`
-  // margin-left: 5%;
-  margin-top: 70px;
-  height: 100%;
-  width: 80%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-
-`;
 export default App;

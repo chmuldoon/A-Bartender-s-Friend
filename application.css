@@ -195,12 +195,74 @@ div.searchItem:hover {
   justify-content: center;
   text-align: center;
   padding: auto;
-  padding-top: 3px;
+  /* padding-top: 3px 3px 0 3px; */
   color: white;
   margin: 5px;
  
 }
-@media (max-width: 700px) {
+.sideBar {
+  margin-top: 35px;
+  overflow-y: scroll;
+  background-color: #c1c1c1;
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  max-height: 900px;
+  width: 259px;
+}
+.drinkSection {
+  width: 90%;
+  height: 90%;
+  overflow-y: scroll;
+  min-height: 80%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-left: -20px;
+
+}
+.content {
+  margin-left: 5%;
+  margin-top: 70px;
+  height: 100%;
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.mainArea {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  height: 90%;
+  width: 100%;
+}
+
+.drinkCard {
+  width: 260px;
+  height: 530px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-left: 20px;
+  margin-bottom: 20px;
+  background-color: white;
+}
+.ingredientsSection {
+  display: grid;
+  grid-template-columns: 100px 100px;
+  grid-template-rows: 40px 40px 40px 40px 40px;
+}
+.drinkCard.drinkTitle {
+  font-family: "Avenir Next", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 1.233333rem;
+    font-weight: 500;
+    padding: 0, 10px, 0, 10px;
+}
+@media (max-width: 812px) {
+  #main {
+    height: 600px;
+  }
   .hide-sm {
     display: none;
   }
@@ -210,4 +272,37 @@ div.searchItem:hover {
   justify-content: center;
 
   }
+  .barCenter {
+    float: left;
+  }
+  .content {
+    margin: 0;
+    width: 100%;
+  }
+  .drinkCard {
+    width: 100%;
+    height: auto;
+    padding-bottom: 10px;
+  }
+  .drinkSection {
+    height: auto;
+    overflow-y: auto;
+    margin-left: none;
+
+  }
+  .ingredientsSection {
+    grid-template-columns: 200px 200px;
+    grid-template-rows: 70px 70px 70px 70px 70px;
+  
+  }
+  .ingredientsSection div {
+    border-radius: 30px;
+    font-size: 25px;
+    height: 50px;
+    margin: auto 3px auto 3px;
+  }
+  .drinkTitle {
+    font-size: 3rem;
+  }
+  
 }
