@@ -14,49 +14,20 @@ const App = props => {
   const [using, setUsing] = useState(["Rum", "Gin", "Water", "Salt", "Ice", "Sugar", "Food Coloring", "Brandy"]);
   //attempting to make ingredient search a thing
   useEffect(() => {
-    
-    fetch(`https://www.thecocktaildb.com/api/json/v1/${1}/list.php?i=list`)
-      .then(res => res.json())
-      .then(result => {
-        if (result.drinks === null) {
-          setIngredients([]);
-        } else {
-          setIngredients(result.drinks);
-        }
-      });
-    fetch(`https://www.thecocktaildb.com/api/json/v1/${1}/search.php?s=`)
-      .then(res => res.json())
-      .then(result => {
-        if (result.drinks === null) {
-          setDrinks([]);
-        } else {
-          result.drinks.forEach(drink => {
-            let drinkIngredients = Object.values(drink)
-              .slice(21, 36)
-              .filter(ing => ing !== null)
-              .map(ing =>
-                ing.toLowerCase().includes("whisk") ? "Whiskey" : 
-                ing.toLowerCase().includes("vodka") ? "Vodka" :
-                ing
-              );
-            drink["ingredients"] = [... new Set(drinkIngredients)]
-            
-            // debugger
-            drink["rank"] = compare(using, drink["ingredients"] )
-          })
-          setDrinks(
-            result.drinks
-              .filter(drink => drink.strAlcoholic === "Alcoholic")
-              .sort((a, b) => b.rank - a.rank)
-          );
-        }
-      });
+    setIngredients(props.ing);
+    let baseDrinks = props.coc
+    baseDrinks.forEach(drink => {
+      drink["rank"] = compare(using, drink["using"]);
+
+    })
+    debugger
+    setDrinks(
+      baseDrinks.sort((a, b) => b.rank - a.rank));
   }, []);
   const compare = (l1,l2) =>{
     let count = 0
     l1 = l1.map( word => word.toLowerCase())
     l2 = l2.map(word => word.toLowerCase());
-
     l2.forEach(el => {
       if(l1.includes(el)){
         count += 1
@@ -84,7 +55,7 @@ const App = props => {
   const handleChange = field => {
     return e => {
       let filtered = ingredients.filter(ing =>
-        ing.strIngredient1.toLowerCase().includes(e.target.value.toLowerCase())
+        ing.toLowerCase().includes(e.target.value.toLowerCase())
       );
       if (e.target.value === "") {
         filtered = [];
@@ -115,71 +86,25 @@ const App = props => {
       if (using.includes(e.target.textContent)) {
         setUsing(using.filter(used => used !== event.target.textContent));
         let prevUsing = using.filter(used => used !== event.target.textContent);
-
-        if (prevUsing.length === 0) {
-          setDrinks([]);
-        } else {
-          fetch(
-            `https://www.thecocktaildb.com/api/json/v1/${1}/search.php?s=`
-          )
-            .then(res => res.json()).then(result => {
-              result.drinks.forEach(drink => {
-                let drinkIngredients = Object.values(drink)
-                .slice(21, 36)
-                .filter(ing => ing !== null)
-                .map(ing =>
-                ing.toLowerCase().includes("whisk") ? "Whiskey" : 
-                ing.toLowerCase().includes("vodka") ? "Vodka" :
-                ing
-              );
-            drink["ingredients"] = [... new Set(drinkIngredients)]
-                  
-
-                drink["rank"] = compare(prevUsing, drink["ingredients"]);
-              });
-              setDrinks(
-                result.drinks
-                  .filter(drink => drink.strAlcoholic === "Alcoholic")
-                  .sort((a, b) => b.rank - a.rank)
-              );
-            });
-         
-        }
+        let baseDrinks = props.coc
+        baseDrinks.forEach(drink => {
+          drink["rank"] = compare(prevUsing, drink["using"])
+        })
+        setDrinks(result.drinks.sort((a, b) => b.rank - a.rank))
       } else {
         setUsing([...using, e.target.textContent]);
-        // debugger
         setSearchTerm("")
         let prevUsing = [...using, e.target.textContent];
-        // debugger
-        fetch(`https://www.thecocktaildb.com/api/json/v1/${1}/search.php?s=`)
-          .then(res => res.json())
-          .then(result => {
-              result.drinks.forEach(drink => {
-                let drinkIngredients = Object.values(drink)
-                  .slice(21, 36)
-                  .filter(ing => ing !== null)
-                  .map(ing =>
-                    ing.toLowerCase().includes("whisk")
-                      ? "Whiskey"
-                      : ing.toLowerCase().includes("vodka")
-                      ? "Vodka"
-                      : ing
-                  );
-                drink["ingredients"] = [...new Set(drinkIngredients)];
-                  
-
-                drink["rank"] = compare(prevUsing, drink["ingredients"]);
-              });
-              setDrinks(
-                result.drinks
-                  .filter(drink => drink.strAlcoholic === "Alcoholic")
-                  .sort((a, b) => b.rank - a.rank)
-              );
-          });
+        let baseDrinks = props.coc;
+        baseDrinks.forEach(drink => {
+          drink["rank"] = compare(prevUsing, drink["using"]);
+        });
+        setDrinks(result.drinks.sort((a, b) => b.rank - a.rank));
         
       }
     };
   };
+  debugger
   return (
     <Fragment>
       <div className="topBar">
@@ -226,25 +151,25 @@ const App = props => {
       </div>
       <span className="show-sm">
         <div className="sideBar">
-          {displayed.map(drink => {
+          {displayed.map(ing => {
             return (
               <Fragment>
-                {using.includes(drink.strIngredient1) ? (
+                {using.includes(ing) ? (
                   <div className="checkedSearchItem" onClick={handleClick("using")}>
-                    <img src={parseImg(drink.strIngredient1)} />
+                    <img src={parseImg(ing)} />
                     <p>
-                      {drink.strIngredient1.length > 22
-                        ? drink.strIngredient1.slice(0, 22)
-                        : drink.strIngredient1}
+                      {ing.length > 22
+                        ? ing.slice(0, 22)
+                        : ing}
                     </p>
                   </div>
                 ) : (
                   <div className="searchItem" onClick={handleClick("using")}>
-                    <img src={parseImg(drink.strIngredient1)} />
+                    <img src={parseImg(ing)} />
                     <p>
-                      {drink.strIngredient1.length > 22
-                        ? drink.strIngredient1.slice(0, 22)
-                        : drink.strIngredient1}
+                      {ing.length > 22
+                        ? ing.slice(0, 22)
+                        : ing}
                     </p>
                   </div>
                 )}
@@ -256,25 +181,25 @@ const App = props => {
       <div className="mainArea">
         {showSearch && (
           <div className="sideBar">
-            {displayed.map(drink => {
+            {displayed.map(ing => {
               return (
                 <Fragment>
-                  {using.includes(drink.strIngredient1) ? (
+                  {using.includes(ing) ? (
                     <div className="checkedSearchItem">
-                      <img src={parseImg(drink.strIngredient1)} />
+                      <img src={parseImg(ing)} />
                       <p onClick={handleClick("using")}>
-                        {drink.strIngredient1.length > 22
-                          ? drink.strIngredient1.slice(0, 22)
-                          : drink.strIngredient1}
+                        {ing.length > 22
+                          ? ing.slice(0, 22)
+                          : ing}
                       </p>
                     </div>
                   ) : (
                     <div className="searchItem">
-                      <img src={parseImg(drink.strIngredient1)} />
+                      <img src={parseImg(ing)} />
                       <p onClick={handleClick("using")}>
-                        {drink.strIngredient1.length > 22
-                          ? drink.strIngredient1.slice(0, 22)
-                          : drink.strIngredient1}
+                        {ing.length > 22
+                          ? ing.slice(0, 22)
+                          : ing}
                       </p>
                     </div>
                   )}
@@ -306,7 +231,7 @@ const App = props => {
             {drinks
               .filter(drink => drink.rank !== 0)
               .map(drink => (
-                <Item using={using} key={drink.idDrink} drink={drink} />
+                <Item using={using} key={drink.name} drink={drink} />
               ))}
           </div>
         </div>
