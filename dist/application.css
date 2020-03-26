@@ -274,18 +274,18 @@ div.searchItem:hover {
   width: 259px;
 }
 .drinkSection {
-  width: 90%;
+  width: 100%;
   height: 90%;
+  /* padding: 0 20px 0 20px; */
   overflow-y: scroll;
   min-height: 80%;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  margin-left: -20px;
+  /* margin-left: -20px; */
 
 }
 .content {
-  margin-left: 5%;
   margin-top: 70px;
   height: 100%;
   width: 80%;
@@ -307,7 +307,9 @@ div.searchItem:hover {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-left: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+
   margin-bottom: 20px;
   background-color: white;
 }
@@ -515,11 +517,12 @@ div.searchItem:hover {
   }
   .content {
     margin: 0;
-    width: 80%;
+    width: 100%;
   }
   .drinkCard {
     width: 100%;
     height: auto;
+    margin: 0;
     padding-bottom: 10px;
   }
   .modal-background {
@@ -527,8 +530,9 @@ div.searchItem:hover {
   }
 
   .drinkSection {
-    height: 90%;
+    height: 100%;
     overflow-y: scroll;
+    padding: 0 20px 0 20px;
     margin-left: none;
 
   }
