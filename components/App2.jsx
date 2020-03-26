@@ -12,6 +12,8 @@ const App = props => {
   const [showSearch, setShowSearch] = useState(false)
   const [selectedDrink, setSelectedDrink] = useState(null);
   const [displayModal, toggleModal] = useState(false);
+  const [searchType, setSearchType] = useState("ingredients");
+
 
 
   const [using, setUsing] = useState([
@@ -35,7 +37,6 @@ const App = props => {
     
     let baseDrinks = Object.values(props.coc)
       .filter(drink => drink.liqueur !== true && drink.alcoholic)
-    debugger
     baseDrinks.forEach(drink => {
       drink["rank"] = compare(using, drink["using"]);
 
@@ -55,7 +56,9 @@ const App = props => {
     })
     return count
   }
+  
   const parseImg = str => {
+    debugger
     let input = str.toLowerCase().split(" ").join("%20") 
  
     
@@ -74,15 +77,32 @@ const App = props => {
 
   const handleChange = field => {
     return e => {
-      let filtered = ingredients.filter(ing =>
-        ing.toLowerCase().includes(e.target.value.toLowerCase())
-      );
-      if (e.target.value === "") {
-        filtered = [];
-      }
-      setSearchTerm(e.target.value);
-      setDisplayed(filtered);
-    };
+      if(searchType === "ingredients"){
+        let filtered = ingredients.filter(ing =>
+          ing
+            .split(" ")
+            .some(part =>
+              part.toLowerCase().startsWith(e.target.value.toLowerCase())
+            )
+        );
+        if (e.target.value === "") {
+          filtered = [];
+        }
+        setSearchTerm(e.target.value);
+        setDisplayed(filtered);
+      }else{
+        debugger
+        let filtered = Object.values(props.coc).filter(
+          drink => drink.liqueur !== true && drink.alcoholic
+        ).filter(drink => drink.name.split(" ").some(part => 
+          part.toLowerCase().startsWith(e.target.value.toLowerCase())))
+        if (e.target.value === "") {
+          filtered = [];
+        }
+        debugger
+        setSearchTerm(e.target.value);
+        setDisplayed(filtered);
+    }};
   };
 
   const parseUsing = arr => {
@@ -90,47 +110,7 @@ const App = props => {
     return arr.map(el => el.split(" ").join("_")).join(",");
   };
 
-  // const handleClick = event => {
-  //   if(using.includes(event.target.textContent)){
-  //     setUsing(using.filter(used => used !== event.target.textContent));
-  //   }else{
-  //     setUsing([...using, event.target.textContent])
-  //   }
-  // }
-  const selectDrink = field => {
-    debugger
-    return e => {
-      debugger
-      if(e.target === null){
-        setSelectedDrink(null);
-
-      }else{
-        debugger
-        fetch(
-          `https://www.thecocktaildb.com/api/json/v2/1/search.php?s=${field}`
-        )
-          .then(res => res.json())
-          .then(result => {
-            if (result.drinks === null) {
-              setSelectedDrink(null)
-            } else {
-              setSelectedDrink(result.drinks);
   
-  
-              // setIngredients(result.drinks);
-            }
-          });
-
-      }
-    };
-
-  }
-  const handleIngredients = () => {
-    return e => {
-
-    }
-
-  }
   const handleClick = field => {
     return e => {
       debugger
@@ -171,13 +151,73 @@ const App = props => {
         <div className="barLeft">
           <span className="hide-sm">
             {showSearch && (
-              <input
-                className="searchInput"
-                type="text"
-                placeholder="Search for Ingredients"
-                value={searchTerm}
-                onChange={handleChange("searchTerm")}
-              />
+              <div>
+                <input
+                  className="searchInput"
+                  type="text"
+                  placeholder={`Search for ${searchType}`}
+                  value={searchTerm}
+                  onChange={handleChange("searchTerm")}
+                />
+                <div className="searchType">
+                  {searchType === "drinks" ? (
+                    <div
+                      className="searchTypeLeft"
+                      style={{
+                        backgroundColor: "#4CA64C"
+                      }}
+                    >
+                      Drinks
+                    </div>
+                  ) : (
+                    <div
+                      className="searchTypeLeft"
+                      onClick={() => {
+                        setSearchType("drinks");
+                        setSearchTerm("");
+                        setDisplayed([]);
+                      }}
+                      style={{
+                        backgroundColor: "white",
+                        color: "black",
+                        padding: "1px #4CA64C"
+                      }}
+                    >
+                      Drinks
+                    </div>
+                  )}
+                  {searchType === "ingredients" ? (
+                    <div
+                      className="searchTypeRight"
+                      style={{
+                        backgroundColor: "#4CA64C",
+                        fontSize: "12px",
+                        fontWeight: "400"
+                      }}
+                    >
+                      Ingredients
+                    </div>
+                  ) : (
+                    <div
+                      className="searchTypeRight"
+                      onClick={() => {
+                        setSearchType("ingredients");
+                        setSearchTerm("");
+                        setDisplayed([]);
+                      }}
+                      style={{
+                        backgroundColor: "white",
+                        color: "black",
+
+                        fontSize: "12px",
+                        fontWeight: "400"
+                      }}
+                    >
+                      Ingredients
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
           </span>
           <span className="hide-sm">
@@ -189,87 +229,196 @@ const App = props => {
           </span>
 
           <span className="show-sm">
-            <i class="fas fa-cocktail"></i>
+            <i
+              class="fas fa-cocktail"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setSearchTerm("");
+                setDisplayed([]);
+              }}
+            ></i>
           </span>
         </div>
         <span className="hide-sm">
           <div className="barCenter">A Bartender's Friend</div>
         </span>
         <span className="show-sm">
-          <input
-            className="searchInput"
-            type="text"
-            placeholder="Search for Ingredients"
-            value={searchTerm}
-            onChange={handleChange("searchTerm")}
-          />
-          <i
-            class="fas fa-times"
-            onClick={() => {
-              setSearchTerm("")
-              setDisplayed([])
-            }}
-            style={{
-              marginTop: "10px",
-              color: "white",
-              cursor: "pointer",
-              float: "right"
-            }}
-          ></i>
+          <div>
+            <input
+              className="searchInput"
+              type="text"
+              placeholder={`Search for ${searchType}`}
+              value={searchTerm}
+              onChange={handleChange("searchTerm")}
+            />
+            <i
+              class="fas fa-times"
+              onClick={() => {
+                setSearchTerm("");
+                setDisplayed([]);
+              }}
+              style={{
+                marginTop: "10px",
+                color: "white",
+                cursor: "pointer",
+                float: "right"
+              }}
+            ></i>
+          </div>
+          <div>
+            <div className="searchType">
+              {searchType === "drinks" ? (
+                <div
+                  className="searchTypeLeft"
+                  style={{
+                    backgroundColor: "#4CA64C"
+                  }}
+                >
+                  Drinks
+                </div>
+              ) : (
+                <div
+                  className="searchTypeLeft"
+                  onClick={() => {
+                    setSearchType("drinks");
+                    setSearchTerm("");
+                    setDisplayed([]);
+                  }}
+                  style={{
+                    backgroundColor: "white",
+                    color: "black",
+                    padding: "1px #4CA64C"
+                  }}
+                >
+                  Drinks
+                </div>
+              )}
+              {searchType === "ingredients" ? (
+                <div
+                  className="searchTypeRight"
+                  style={{
+                    backgroundColor: "#4CA64C",
+                    fontSize: "12px",
+                    fontWeight: "400"
+                  }}
+                >
+                  Ingredients
+                </div>
+              ) : (
+                <div
+                  className="searchTypeRight"
+                  onClick={() => {
+                    setSearchType("ingredients");
+                    setSearchTerm("");
+                    setDisplayed([]);
+                  }}
+                  style={{
+                    backgroundColor: "white",
+                    color: "black",
+
+                    fontSize: "12px",
+                    fontWeight: "400"
+                  }}
+                >
+                  Ingredients
+                </div>
+              )}
+            </div>
+          </div>
         </span>
 
-        <div className="barRight">
-          <i className="fas fa-bars"></i>
-        </div>
+        <div className="barRight">{/* <i className="fas fa-bars"></i> */}</div>
       </div>
       <span className="show-sm">
         <div className="sideBar">
-          {displayed.map(ing => {
-            return (
-              <Fragment>
-                {using.includes(ing) ? (
+          {searchType === "drinks" &&
+            displayed.map(drink => {
+              return (
+                <Fragment>
                   <div
-                    className="checkedSearchItem"
-                    onClick={handleClick("using")}
+                    className="searchItem"
+                    onClick={() => {
+                      toggleModal(!displayModal);
+                      setSelectedDrink(drink);
+                    }}
                   >
-                    <img src={parseImg(ing)} />
-                    <p>{ing.length > 22 ? ing.slice(0, 22) : ing}</p>
+                    <img
+                      src={`https://www.thecocktaildb.com/images/media/drink/${drink.photo}`}
+                    />
+                    <p>{drink.name}</p>
                   </div>
-                ) : (
-                  <div className="searchItem" onClick={handleClick("using")}>
-                    <img src={parseImg(ing)} />
-                    <p>{ing.length > 22 ? ing.slice(0, 22) : ing}</p>
-                  </div>
-                )}
-              </Fragment>
-            );
-          })}
-        </div>
-      </span>
-      <div className="mainArea">
-        {showSearch && (
-          <div className="sideBar">
-            {displayed.map(ing => {
+                </Fragment>
+              );
+            })}
+          {searchType === "ingredients" &&
+            displayed.map(ing => {
               return (
                 <Fragment>
                   {using.includes(ing) ? (
-                    <div className="checkedSearchItem">
+                    <div
+                      className="checkedSearchItem"
+                      onClick={handleClick("using")}
+                    >
                       <img src={parseImg(ing)} />
-                      <p onClick={handleClick("using")}>
-                        {ing.length > 22 ? ing.slice(0, 22) : ing}
-                      </p>
+                      <p>{ing.length > 22 ? ing.slice(0, 22) : ing}</p>
                     </div>
                   ) : (
-                    <div className="searchItem">
+                    <div className="searchItem" onClick={handleClick("using")}>
                       <img src={parseImg(ing)} />
-                      <p onClick={handleClick("using")}>
-                        {ing.length > 22 ? ing.slice(0, 22) : ing}
-                      </p>
+                      <p>{ing.length > 22 ? ing.slice(0, 22) : ing}</p>
                     </div>
                   )}
                 </Fragment>
               );
             })}
+        </div>
+      </span>
+      <div className="mainArea">
+        {showSearch && (
+          <div className="sideBar">
+            {searchType === "drinks" &&
+              displayed.map(drink => {
+                return (
+                  <Fragment>
+                    <div
+                      className="searchItem"
+                      onClick={() => {
+                        toggleModal(!displayModal);
+                        setSelectedDrink(drink);
+                      }}
+                    >
+                      <img
+                        src={`https://www.thecocktaildb.com/images/media/drink/${drink.photo}`}
+                      />
+                      <p>{drink.name}</p>
+                    </div>
+                  </Fragment>
+                );
+              })}
+            {searchType === "ingredients" &&
+              displayed.map(ing => {
+                return (
+                  <Fragment>
+                    {using.includes(ing) ? (
+                      <div
+                        className="checkedSearchItem"
+                        onClick={handleClick("using")}
+                      >
+                        <img src={parseImg(ing)} />
+                        <p>{ing.length > 22 ? ing.slice(0, 22) : ing}</p>
+                      </div>
+                    ) : (
+                      <div
+                        className="searchItem"
+                        onClick={handleClick("using")}
+                      >
+                        <img src={parseImg(ing)} />
+                        <p>{ing.length > 22 ? ing.slice(0, 22) : ing}</p>
+                      </div>
+                    )}
+                  </Fragment>
+                );
+              })}
           </div>
         )}
         <div className="content">

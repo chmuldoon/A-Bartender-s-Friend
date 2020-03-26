@@ -216,10 +216,15 @@ var App = function App(props) {
       displayModal = _useState14[0],
       toggleModal = _useState14[1];
 
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(["Rum", "Gin", "Water", "Salt", "Ice", "Sugar", "Food Coloring", "Brandy", "Orange Juice", "Orange", "Tonic Water", "Club Soda", "Vodka"]),
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])("ingredients"),
       _useState16 = _slicedToArray(_useState15, 2),
-      using = _useState16[0],
-      setUsing = _useState16[1]; //attempting to make ingredient search a thing
+      searchType = _useState16[0],
+      setSearchType = _useState16[1];
+
+  var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(["Rum", "Gin", "Water", "Salt", "Ice", "Sugar", "Food Coloring", "Brandy", "Orange Juice", "Orange", "Tonic Water", "Club Soda", "Vodka"]),
+      _useState18 = _slicedToArray(_useState17, 2),
+      using = _useState18[0],
+      setUsing = _useState18[1]; //attempting to make ingredient search a thing
 
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
@@ -227,7 +232,6 @@ var App = function App(props) {
     var baseDrinks = Object.values(props.coc).filter(function (drink) {
       return drink.liqueur !== true && drink.alcoholic;
     });
-    debugger;
     baseDrinks.forEach(function (drink) {
       drink["rank"] = compare(using, drink["using"]);
     }); // debugger
@@ -254,6 +258,7 @@ var App = function App(props) {
   };
 
   var parseImg = function parseImg(str) {
+    debugger;
     var input = str.toLowerCase().split(" ").join("%20");
     return "https://www.thecocktaildb.com/images/ingredients/".concat(input, "-Small.png");
   };
@@ -270,16 +275,38 @@ var App = function App(props) {
 
   var handleChange = function handleChange(field) {
     return function (e) {
-      var filtered = ingredients.filter(function (ing) {
-        return ing.toLowerCase().includes(e.target.value.toLowerCase());
-      });
+      if (searchType === "ingredients") {
+        var filtered = ingredients.filter(function (ing) {
+          return ing.split(" ").some(function (part) {
+            return part.toLowerCase().startsWith(e.target.value.toLowerCase());
+          });
+        });
 
-      if (e.target.value === "") {
-        filtered = [];
+        if (e.target.value === "") {
+          filtered = [];
+        }
+
+        setSearchTerm(e.target.value);
+        setDisplayed(filtered);
+      } else {
+        debugger;
+
+        var _filtered = Object.values(props.coc).filter(function (drink) {
+          return drink.liqueur !== true && drink.alcoholic;
+        }).filter(function (drink) {
+          return drink.name.split(" ").some(function (part) {
+            return part.toLowerCase().startsWith(e.target.value.toLowerCase());
+          });
+        });
+
+        if (e.target.value === "") {
+          _filtered = [];
+        }
+
+        debugger;
+        setSearchTerm(e.target.value);
+        setDisplayed(_filtered);
       }
-
-      setSearchTerm(e.target.value);
-      setDisplayed(filtered);
     };
   };
 
@@ -288,39 +315,6 @@ var App = function App(props) {
     return arr.map(function (el) {
       return el.split(" ").join("_");
     }).join(",");
-  }; // const handleClick = event => {
-  //   if(using.includes(event.target.textContent)){
-  //     setUsing(using.filter(used => used !== event.target.textContent));
-  //   }else{
-  //     setUsing([...using, event.target.textContent])
-  //   }
-  // }
-
-
-  var selectDrink = function selectDrink(field) {
-    debugger;
-    return function (e) {
-      debugger;
-
-      if (e.target === null) {
-        setSelectedDrink(null);
-      } else {
-        debugger;
-        fetch("https://www.thecocktaildb.com/api/json/v2/1/search.php?s=".concat(field)).then(function (res) {
-          return res.json();
-        }).then(function (result) {
-          if (result.drinks === null) {
-            setSelectedDrink(null);
-          } else {
-            setSelectedDrink(result.drinks); // setIngredients(result.drinks);
-          }
-        });
-      }
-    };
-  };
-
-  var handleIngredients = function handleIngredients() {
-    return function (e) {};
   };
 
   var handleClick = function handleClick(field) {
@@ -372,13 +366,52 @@ var App = function App(props) {
     className: "barLeft"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "hide-sm"
-  }, showSearch && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+  }, showSearch && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     className: "searchInput",
     type: "text",
-    placeholder: "Search for Ingredients",
+    placeholder: "Search for ".concat(searchType),
     value: searchTerm,
     onChange: handleChange("searchTerm")
-  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchType"
+  }, searchType === "drinks" ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchTypeLeft",
+    style: {
+      backgroundColor: "#4CA64C"
+    }
+  }, "Drinks") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchTypeLeft",
+    onClick: function onClick() {
+      setSearchType("drinks");
+      setSearchTerm("");
+      setDisplayed([]);
+    },
+    style: {
+      backgroundColor: "white",
+      color: "black",
+      padding: "1px #4CA64C"
+    }
+  }, "Drinks"), searchType === "ingredients" ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchTypeRight",
+    style: {
+      backgroundColor: "#4CA64C",
+      fontSize: "12px",
+      fontWeight: "400"
+    }
+  }, "Ingredients") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchTypeRight",
+    onClick: function onClick() {
+      setSearchType("ingredients");
+      setSearchTerm("");
+      setDisplayed([]);
+    },
+    style: {
+      backgroundColor: "white",
+      color: "black",
+      fontSize: "12px",
+      fontWeight: "400"
+    }
+  }, "Ingredients")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "hide-sm"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     onClick: function onClick() {
@@ -391,17 +424,24 @@ var App = function App(props) {
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "show-sm"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    "class": "fas fa-cocktail"
+    "class": "fas fa-cocktail",
+    style: {
+      cursor: "pointer"
+    },
+    onClick: function onClick() {
+      setSearchTerm("");
+      setDisplayed([]);
+    }
   }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "hide-sm"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "barCenter"
   }, "A Bartender's Friend")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "show-sm"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     className: "searchInput",
     type: "text",
-    placeholder: "Search for Ingredients",
+    placeholder: "Search for ".concat(searchType),
     value: searchTerm,
     onChange: handleChange("searchTerm")
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -416,15 +456,62 @@ var App = function App(props) {
       cursor: "pointer",
       "float": "right"
     }
-  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchType"
+  }, searchType === "drinks" ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchTypeLeft",
+    style: {
+      backgroundColor: "#4CA64C"
+    }
+  }, "Drinks") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchTypeLeft",
+    onClick: function onClick() {
+      setSearchType("drinks");
+      setSearchTerm("");
+      setDisplayed([]);
+    },
+    style: {
+      backgroundColor: "white",
+      color: "black",
+      padding: "1px #4CA64C"
+    }
+  }, "Drinks"), searchType === "ingredients" ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchTypeRight",
+    style: {
+      backgroundColor: "#4CA64C",
+      fontSize: "12px",
+      fontWeight: "400"
+    }
+  }, "Ingredients") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "searchTypeRight",
+    onClick: function onClick() {
+      setSearchType("ingredients");
+      setSearchTerm("");
+      setDisplayed([]);
+    },
+    style: {
+      backgroundColor: "white",
+      color: "black",
+      fontSize: "12px",
+      fontWeight: "400"
+    }
+  }, "Ingredients")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "barRight"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    className: "fas fa-bars"
-  }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "show-sm"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "sideBar"
-  }, displayed.map(function (ing) {
+  }, searchType === "drinks" && displayed.map(function (drink) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "searchItem",
+      onClick: function onClick() {
+        toggleModal(!displayModal);
+        setSelectedDrink(drink);
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      src: "https://www.thecocktaildb.com/images/media/drink/".concat(drink.photo)
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, drink.name)));
+  }), searchType === "ingredients" && displayed.map(function (ing) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, using.includes(ing) ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "checkedSearchItem",
       onClick: handleClick("using")
@@ -440,20 +527,28 @@ var App = function App(props) {
     className: "mainArea"
   }, showSearch && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "sideBar"
-  }, displayed.map(function (ing) {
+  }, searchType === "drinks" && displayed.map(function (drink) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "searchItem",
+      onClick: function onClick() {
+        toggleModal(!displayModal);
+        setSelectedDrink(drink);
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      src: "https://www.thecocktaildb.com/images/media/drink/".concat(drink.photo)
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, drink.name)));
+  }), searchType === "ingredients" && displayed.map(function (ing) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, using.includes(ing) ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "checkedSearchItem"
+      className: "checkedSearchItem",
+      onClick: handleClick("using")
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       src: parseImg(ing)
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, ing.length > 22 ? ing.slice(0, 22) : ing)) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "searchItem",
       onClick: handleClick("using")
-    }, ing.length > 22 ? ing.slice(0, 22) : ing)) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "searchItem"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       src: parseImg(ing)
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-      onClick: handleClick("using")
-    }, ing.length > 22 ? ing.slice(0, 22) : ing)));
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, ing.length > 22 ? ing.slice(0, 22) : ing)));
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "content"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
