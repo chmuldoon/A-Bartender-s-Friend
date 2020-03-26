@@ -8,6 +8,10 @@ const App = (props) => {
   const [ingredients, setIngredients] = useState([]);
   const [displayed, setDisplayed] = useState([])
   const [using, setUsing] = useState([])
+  const [alc, setAlc] = useState(false);
+  const [nonAlc, setNonAlc] = useState(false);
+  const [liqueur, setLiqueur] = useState(false);
+
 
 
   //attempting to make ingredient search a thing

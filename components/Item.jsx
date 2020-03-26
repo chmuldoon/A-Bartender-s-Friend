@@ -7,8 +7,9 @@ class Item extends Component {
     // this.ingredientList = this.ingredientList.bind(this)
   }
   renderIngredients(drink){
-    let adjustedProps = this.props.using.map(word => word.toLowerCase())
-    return drink.using.map(ing => {
+    let adjustedProps = this.props.using.map(word => word.toLowerCase());
+    let filtered = drink.using.filter(ing => ing !== '');
+    return filtered.map(ing => {
         return (
           <div className="ingredientItem">
             {adjustedProps.includes(ing.toLowerCase()) ? (
@@ -46,7 +47,7 @@ class Item extends Component {
         <div>
           {/* <p>{drink.strCategory}</p> */}
           <img
-            src={drink.photo}
+            src={`https://www.thecocktaildb.com/images/media/drink/${drink.photo}`}
             style={{ width: "100%", marginBottom: "10px" }}
             alt=""
           />

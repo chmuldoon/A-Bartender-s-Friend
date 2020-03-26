@@ -3,24 +3,44 @@ import React, { Component, Fragment, useState, useEffect, useRef } from "react";
 import Item from "./Item";
 import styled from "styled-components";
 import UsingList from "./UsingList";
+import DrinkShow from "./DrinkShow";
 const App = props => {
-  const mounted = useRef();
   const [searchTerm, setSearchTerm] = useState("");
   const [drinks, setDrinks] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [displayed, setDisplayed] = useState([]);
   const [showSearch, setShowSearch] = useState(false)
   const [selectedDrink, setSelectedDrink] = useState(null);
-  const [using, setUsing] = useState(["Rum", "Gin", "Water", "Salt", "Ice", "Sugar", "Food Coloring", "Brandy"]);
+  const [displayModal, toggleModal] = useState(false);
+
+
+  const [using, setUsing] = useState([
+    "Rum", 
+    "Gin", 
+    "Water", 
+    "Salt", 
+    "Ice", 
+    "Sugar", 
+    "Food Coloring",
+     "Brandy", 
+     "Orange Juice", 
+     "Orange",
+     "Tonic Water",
+     "Club Soda",
+     "Vodka"
+    ]);
   //attempting to make ingredient search a thing
   useEffect(() => {
     setIngredients(props.ing);
-    let baseDrinks = props.coc
+    
+    let baseDrinks = Object.values(props.coc)
+      .filter(drink => drink.liqueur !== true && drink.alcoholic)
+    debugger
     baseDrinks.forEach(drink => {
       drink["rank"] = compare(using, drink["using"]);
 
     })
-    debugger
+    // debugger
     setDrinks(
       baseDrinks.sort((a, b) => b.rank - a.rank));
   }, []);
@@ -77,34 +97,74 @@ const App = props => {
   //     setUsing([...using, event.target.textContent])
   //   }
   // }
+  const selectDrink = field => {
+    debugger
+    return e => {
+      debugger
+      if(e.target === null){
+        setSelectedDrink(null);
 
+      }else{
+        debugger
+        fetch(
+          `https://www.thecocktaildb.com/api/json/v2/1/search.php?s=${field}`
+        )
+          .then(res => res.json())
+          .then(result => {
+            if (result.drinks === null) {
+              setSelectedDrink(null)
+            } else {
+              setSelectedDrink(result.drinks);
+  
+  
+              // setIngredients(result.drinks);
+            }
+          });
+
+      }
+    };
+
+  }
   const handleIngredients = () => {
+    return e => {
+
+    }
 
   }
   const handleClick = field => {
     return e => {
-      if (using.includes(e.target.textContent)) {
-        setUsing(using.filter(used => used !== event.target.textContent));
+      debugger
+      if (using.map(used => used.toLowerCase()).includes(e.target.textContent.toLowerCase().trim())) {
+        setUsing(
+          using.filter(
+            used =>
+              used.toLowerCase().trim() !==
+              event.target.textContent.toLowerCase().trim()
+          )
+        );
         let prevUsing = using.filter(used => used !== event.target.textContent);
-        let baseDrinks = props.coc
+        let baseDrinks = Object.values(props.coc).filter(
+          drink => drink.liqueur !== true && drink.alcoholic
+        );
         baseDrinks.forEach(drink => {
           drink["rank"] = compare(prevUsing, drink["using"])
         })
-        setDrinks(result.drinks.sort((a, b) => b.rank - a.rank))
+        setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
       } else {
         setUsing([...using, e.target.textContent]);
         setSearchTerm("")
         let prevUsing = [...using, e.target.textContent];
-        let baseDrinks = props.coc;
+        let baseDrinks = Object.values(props.coc).filter(
+          drink => drink.liqueur !== true && drink.alcoholic
+        );
         baseDrinks.forEach(drink => {
           drink["rank"] = compare(prevUsing, drink["using"]);
         });
-        setDrinks(result.drinks.sort((a, b) => b.rank - a.rank));
+        setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank));
         
       }
     };
   };
-  debugger
   return (
     <Fragment>
       <div className="topBar">
@@ -143,6 +203,19 @@ const App = props => {
             value={searchTerm}
             onChange={handleChange("searchTerm")}
           />
+          <i
+            class="fas fa-times"
+            onClick={() => {
+              setSearchTerm("")
+              setDisplayed([])
+            }}
+            style={{
+              marginTop: "10px",
+              color: "white",
+              cursor: "pointer",
+              float: "right"
+            }}
+          ></i>
         </span>
 
         <div className="barRight">
@@ -155,22 +228,17 @@ const App = props => {
             return (
               <Fragment>
                 {using.includes(ing) ? (
-                  <div className="checkedSearchItem" onClick={handleClick("using")}>
+                  <div
+                    className="checkedSearchItem"
+                    onClick={handleClick("using")}
+                  >
                     <img src={parseImg(ing)} />
-                    <p>
-                      {ing.length > 22
-                        ? ing.slice(0, 22)
-                        : ing}
-                    </p>
+                    <p>{ing.length > 22 ? ing.slice(0, 22) : ing}</p>
                   </div>
                 ) : (
                   <div className="searchItem" onClick={handleClick("using")}>
                     <img src={parseImg(ing)} />
-                    <p>
-                      {ing.length > 22
-                        ? ing.slice(0, 22)
-                        : ing}
-                    </p>
+                    <p>{ing.length > 22 ? ing.slice(0, 22) : ing}</p>
                   </div>
                 )}
               </Fragment>
@@ -188,18 +256,14 @@ const App = props => {
                     <div className="checkedSearchItem">
                       <img src={parseImg(ing)} />
                       <p onClick={handleClick("using")}>
-                        {ing.length > 22
-                          ? ing.slice(0, 22)
-                          : ing}
+                        {ing.length > 22 ? ing.slice(0, 22) : ing}
                       </p>
                     </div>
                   ) : (
                     <div className="searchItem">
                       <img src={parseImg(ing)} />
                       <p onClick={handleClick("using")}>
-                        {ing.length > 22
-                          ? ing.slice(0, 22)
-                          : ing}
+                        {ing.length > 22 ? ing.slice(0, 22) : ing}
                       </p>
                     </div>
                   )}
@@ -209,7 +273,7 @@ const App = props => {
           </div>
         )}
         <div className="content">
-          <UsingContent>
+          <div className="usingContent">
             <div style={{ width: "100%" }}>
               <p>Your virtual shelf is stocked with:</p>
             </div>
@@ -218,24 +282,75 @@ const App = props => {
                 className="ingItem"
                 onClick={handleClick("using")}
                 style={{
-                  backgroundColor: "#4CA64C",
                   color: "white",
                   minWidth: "50px"
                 }}
               >
-                {used}
+                {`${used} `}
+                <i
+                  class="fas fa-times"
+                  style={{
+                    color: "white",
+                    marginLeft: "5px",
+                    marginTop: "1px"
+                  }}
+                ></i>
               </div>
             ))}
-          </UsingContent>
+          </div>
           <div className="drinkSection">
             {drinks
-              .filter(drink => drink.rank !== 0)
+              .filter(drink => drink.rank > 1)
               .map(drink => (
-                <Item using={using} key={drink.name} drink={drink} />
+                <div
+                  onClick={() => {
+                    toggleModal(!displayModal);
+                    setSelectedDrink(drink);
+                  }}
+                >
+                  <Item using={using} key={drink.name} drink={drink} />
+                </div>
               ))}
           </div>
         </div>
       </div>
+      {displayModal && (
+        <div
+          className="modal-background"
+          onClick={() => {
+            toggleModal(!displayModal);
+            setSelectedDrink(null);
+          }}
+        >
+          <div
+            className="modal-child"
+            style={{ display: "flex" }}
+            onClick={e => {
+              e.stopPropagation();
+            }}
+          >
+            <div className="modal-case">
+              <div className="Xcase">
+                <i
+                  class="fas fa-times"
+                  style={{
+                    fontSize: "30px",
+                    color: "white",
+                    cursor: "pointer",
+                    marginBottom: "10px"
+                  }}
+                  onClick={() => {
+                    toggleModal(!displayModal);
+                    setSelectedDrink(null);
+                  }}
+                ></i>
+              </div>
+
+              <DrinkShow using={using} drink={selectedDrink} />
+            </div>
+          </div>
+        </div>
+      )}
     </Fragment>
   );
 };
