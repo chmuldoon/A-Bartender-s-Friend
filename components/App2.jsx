@@ -58,7 +58,6 @@ const App = props => {
   }
   
   const parseImg = str => {
-    debugger
     let input = str.toLowerCase().split(" ").join("%20") 
  
     
@@ -91,7 +90,6 @@ const App = props => {
         setSearchTerm(e.target.value);
         setDisplayed(filtered);
       }else{
-        debugger
         let filtered = Object.values(props.coc).filter(
           drink => drink.liqueur !== true && drink.alcoholic
         ).filter(drink => drink.name.split(" ").some(part => 
@@ -99,7 +97,6 @@ const App = props => {
         if (e.target.value === "") {
           filtered = [];
         }
-        debugger
         setSearchTerm(e.target.value);
         setDisplayed(filtered);
     }};
@@ -113,7 +110,6 @@ const App = props => {
   
   const handleClick = field => {
     return e => {
-      debugger
       if (using.map(used => used.toLowerCase()).includes(e.target.textContent.toLowerCase().trim())) {
         setUsing(
           using.filter(

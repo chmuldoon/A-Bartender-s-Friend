@@ -522,7 +522,7 @@ div.searchItem:hover {
     padding-bottom: 10px;
   }
   .modal-background {
-    padding-top: 10%;
+    padding-top: 0
   }
 
   .drinkSection {
@@ -550,11 +550,14 @@ div.searchItem:hover {
     font-size: 2rem;
 
   }
+  .searchTypeRight,
+  .searchTypeLeft {
+    padding-top: 8px
+  }
   .searchType{
     margin-left: 0;
     width: 86%;
     height: 30px;
-    padding-top: 5px;
   }
   
 }

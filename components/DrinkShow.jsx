@@ -53,7 +53,6 @@ const DrinkShow = ({drink, using}) => {
       }
     }).filter(item => item !==  null)
   }
-  debugger
   return (
     <div>
       <div className="drinkShowTitle">{drink.name}</div>

@@ -258,7 +258,6 @@ var App = function App(props) {
   };
 
   var parseImg = function parseImg(str) {
-    debugger;
     var input = str.toLowerCase().split(" ").join("%20");
     return "https://www.thecocktaildb.com/images/ingredients/".concat(input, "-Small.png");
   };
@@ -289,8 +288,6 @@ var App = function App(props) {
         setSearchTerm(e.target.value);
         setDisplayed(filtered);
       } else {
-        debugger;
-
         var _filtered = Object.values(props.coc).filter(function (drink) {
           return drink.liqueur !== true && drink.alcoholic;
         }).filter(function (drink) {
@@ -303,7 +300,6 @@ var App = function App(props) {
           _filtered = [];
         }
 
-        debugger;
         setSearchTerm(e.target.value);
         setDisplayed(_filtered);
       }
@@ -319,8 +315,6 @@ var App = function App(props) {
 
   var handleClick = function handleClick(field) {
     return function (e) {
-      debugger;
-
       if (using.map(function (used) {
         return used.toLowerCase();
       }).includes(e.target.textContent.toLowerCase().trim())) {
@@ -702,7 +696,6 @@ var DrinkShow = function DrinkShow(_ref) {
     });
   };
 
-  debugger;
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "drinkShowTitle"
   }, drink.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
