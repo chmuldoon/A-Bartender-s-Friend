@@ -566,3 +566,9 @@ div.searchItem:hover {
   }
   
 }
+@media (max-width: 800px) {
+  .drinkShow{
+    height: 520px;
+    width: 300px
+  }
+}
