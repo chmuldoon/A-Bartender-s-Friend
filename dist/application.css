@@ -309,7 +309,7 @@ div.searchItem:hover {
   justify-content: center;
   margin-left: 10px;
   margin-right: 10px;
-
+  cursor: pointer;
   margin-bottom: 20px;
   background-color: white;
 }
@@ -511,6 +511,7 @@ div.searchItem:hover {
   }
   .usingContent {
     margin-top: 70px;
+    margin-bottom: 40px;
   }
   .fa-search {
     float: left;

@@ -42,7 +42,8 @@ const App = props => {
 
     })
     // debugger
-    setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
+    // setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
+    setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
 
     // setDrinks(
       // baseDrinks.sort((a, b) => b.rank - a.rank));
@@ -127,9 +128,8 @@ const App = props => {
         baseDrinks.forEach(drink => {
           drink["rank"] = compare(prevUsing, drink["using"])
         })
-        // setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
-        // setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
-        setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
+        setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
+        // setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
 
 
       } else {
@@ -142,10 +142,10 @@ const App = props => {
         baseDrinks.forEach(drink => {
           drink["rank"] = compare(prevUsing, drink["using"]);
         });
-        // setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
+        setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
 
         // setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
-        setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
+        // setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
 
         
       }
@@ -228,7 +228,11 @@ const App = props => {
           </span>
           <span className="hide-sm">
             <i
-              onClick={() => setShowSearch(!showSearch)}
+              onClick={() => {
+                setShowSearch(!showSearch)
+                setSearchTerm("");
+                setDisplayed([])
+              }}
               style={{ cursor: "pointer" }}
               className="fas fa-search"
             ></i>

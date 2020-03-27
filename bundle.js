@@ -235,9 +235,10 @@ var App = function App(props) {
     baseDrinks.forEach(function (drink) {
       drink["rank"] = compare(using, drink["using"]);
     }); // debugger
+    // setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
 
     setDrinks(baseDrinks.sort(function (a, b) {
-      return b.rank / b.using.length * 100 - a.rank / a.using.length * 100;
+      return a.using.length - a.rank - (b.using.length - b.rank);
     })); // setDrinks(
     // baseDrinks.sort((a, b) => b.rank - a.rank));
   }, []);
@@ -330,12 +331,10 @@ var App = function App(props) {
         });
         baseDrinks.forEach(function (drink) {
           drink["rank"] = compare(prevUsing, drink["using"]);
-        }); // setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
-        // setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
-
+        });
         setDrinks(baseDrinks.sort(function (a, b) {
-          return b.rank / b.using.length * 100 - a.rank / a.using.length * 100;
-        }));
+          return a.using.length - a.rank - (b.using.length - b.rank);
+        })); // setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
       } else {
         setUsing([].concat(_toConsumableArray(using), [e.target.textContent]));
         setSearchTerm("");
@@ -348,13 +347,12 @@ var App = function App(props) {
 
         _baseDrinks.forEach(function (drink) {
           drink["rank"] = compare(_prevUsing, drink["using"]);
-        }); // setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
-        // setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
-
+        });
 
         setDrinks(_baseDrinks.sort(function (a, b) {
-          return b.rank / b.using.length * 100 - a.rank / a.using.length * 100;
-        }));
+          return a.using.length - a.rank - (b.using.length - b.rank);
+        })); // setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
+        // setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
       }
     };
   };
@@ -414,7 +412,9 @@ var App = function App(props) {
     className: "hide-sm"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     onClick: function onClick() {
-      return setShowSearch(!showSearch);
+      setShowSearch(!showSearch);
+      setSearchTerm("");
+      setDisplayed([]);
     },
     style: {
       cursor: "pointer"
