@@ -237,8 +237,9 @@ var App = function App(props) {
     }); // debugger
 
     setDrinks(baseDrinks.sort(function (a, b) {
-      return b.rank - a.rank;
-    }));
+      return b.rank / b.using.length * 100 - a.rank / a.using.length * 100;
+    })); // setDrinks(
+    // baseDrinks.sort((a, b) => b.rank - a.rank));
   }, []);
 
   var compare = function compare(l1, l2) {
@@ -329,9 +330,11 @@ var App = function App(props) {
         });
         baseDrinks.forEach(function (drink) {
           drink["rank"] = compare(prevUsing, drink["using"]);
-        });
+        }); // setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
+        // setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
+
         setDrinks(baseDrinks.sort(function (a, b) {
-          return b.rank - a.rank;
+          return b.rank / b.using.length * 100 - a.rank / a.using.length * 100;
         }));
       } else {
         setUsing([].concat(_toConsumableArray(using), [e.target.textContent]));
@@ -345,10 +348,12 @@ var App = function App(props) {
 
         _baseDrinks.forEach(function (drink) {
           drink["rank"] = compare(_prevUsing, drink["using"]);
-        });
+        }); // setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
+        // setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
+
 
         setDrinks(_baseDrinks.sort(function (a, b) {
-          return b.rank - a.rank;
+          return b.rank / b.using.length * 100 - a.rank / a.using.length * 100;
         }));
       }
     };

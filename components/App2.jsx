@@ -42,8 +42,10 @@ const App = props => {
 
     })
     // debugger
-    setDrinks(
-      baseDrinks.sort((a, b) => b.rank - a.rank));
+    setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
+
+    // setDrinks(
+      // baseDrinks.sort((a, b) => b.rank - a.rank));
   }, []);
   const compare = (l1,l2) =>{
     let count = 0
@@ -125,7 +127,11 @@ const App = props => {
         baseDrinks.forEach(drink => {
           drink["rank"] = compare(prevUsing, drink["using"])
         })
-        setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
+        // setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
+        // setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
+        setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
+
+
       } else {
         setUsing([...using, e.target.textContent]);
         setSearchTerm("")
@@ -136,7 +142,11 @@ const App = props => {
         baseDrinks.forEach(drink => {
           drink["rank"] = compare(prevUsing, drink["using"]);
         });
-        setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank));
+        // setDrinks(baseDrinks.sort((a, b) => b.rank - a.rank))
+
+        // setDrinks(baseDrinks.sort((a, b) => (a.using.length - a.rank) - (b.using.length - b.rank)));
+        setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
+
         
       }
     };
