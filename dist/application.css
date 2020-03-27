@@ -267,7 +267,7 @@ div.searchItem:hover {
   margin-top: 25px;
   overflow-y: scroll;
   background-color: #c1c1c1;
-  position: absolute;
+  position: fixed;
   z-index: 3;
   left: 0;
   max-height: 800px;
