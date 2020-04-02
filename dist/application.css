@@ -254,7 +254,7 @@ div.searchItem:hover {
   padding: 0 5px 0 5px;
   cursor: pointer;
   background-color: #4CA64C;
-
+  text-transform:capitalize;
   /* padding-top: 3px 3px 0 3px; */
   color: white;
   margin: 5px;

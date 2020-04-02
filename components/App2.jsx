@@ -15,7 +15,7 @@ const App = props => {
   const [searchType, setSearchType] = useState("ingredients");
 
 
-
+  const [mustHave, setMustHave] = useState([])
   const [using, setUsing] = useState([
     "Rum", 
     "Gin", 
@@ -59,7 +59,9 @@ const App = props => {
     })
     return count
   }
-  
+  const isMustHave = item => {
+    return mustHave.includes(item.toLowerCase().trim()) ? "#50" : "#4CA64C"
+  }
   const parseImg = str => {
     let input = str.toLowerCase().split(" ").join("%20") 
  
@@ -67,16 +69,14 @@ const App = props => {
     return `https://www.thecocktaildb.com/images/ingredients/${input}-Small.png`
     
   }
-  const allPossibleCombos = list => {
-    return list
-      .reduce(
-        (subsets, value) => subsets.concat(subsets.map(set => [value, ...set])),
-        [[]]
-      )
-      .slice(1)
-      .map(set => parseUsing(set));
-  };
-
+  const filterResultsByMustHave = cocktails => {
+    let result = cocktails;
+    let mustHaveList = mustHave.map(item => item.toLowerCase())
+    mustHaveList.forEach(item => {
+      result = result.filter(drink => drink.using.includes(item))
+    })
+    return result
+  }
   const handleChange = field => {
     return e => {
       if(searchType === "ingredients"){
@@ -109,19 +109,36 @@ const App = props => {
     if (arr.length === 0) return "";
     return arr.map(el => el.split(" ").join("_")).join(",");
   };
-
-  
+  const handleMustHave = field => {
+    let dranks = drinks;
+    return e => {
+      if (mustHave.map(used => used.toLowerCase()).includes(e.target.textContent.toLowerCase().trim())) {
+        setMustHave(
+          mustHave.filter(used => used.toLowerCase().trim() !== e.target.textContent.toLowerCase().trim())
+        );
+      } else {
+        setMustHave([...mustHave, e.target.textContent.toLowerCase().trim()]);
+      }
+    }
+  }
   const handleClick = field => {
     return e => {
-      if (using.map(used => used.toLowerCase()).includes(e.target.textContent.toLowerCase().trim())) {
+      if (using.map(used => used.toLowerCase()).includes(e.target.parentElement.textContent.toLowerCase().trim())) {
         setUsing(
           using.filter(
             used =>
               used.toLowerCase().trim() !==
-              event.target.textContent.toLowerCase().trim()
+              e.target.parentElement.textContent.toLowerCase().trim()
           )
         );
-        let prevUsing = using.filter(used => used !== event.target.textContent);
+        setMustHave(
+          mustHave.filter(
+            used =>
+              used.toLowerCase().trim() !==
+              e.target.textContent.toLowerCase().trim()
+          )
+        );
+        let prevUsing = using.filter(used => used !== e.target.parentElement.textContent);
         let baseDrinks = Object.values(props.coc).filter(
           drink => drink.liqueur !== true && drink.alcoholic
         );
@@ -133,9 +150,9 @@ const App = props => {
 
 
       } else {
-        setUsing([...using, e.target.textContent]);
+        setUsing([...using, e.target.parentElement.textContent]);
         setSearchTerm("")
-        let prevUsing = [...using, e.target.textContent];
+        let prevUsing = [...using, e.target.parentElement.textContent];
         let baseDrinks = Object.values(props.coc).filter(
           drink => drink.liqueur !== true && drink.alcoholic
         );
@@ -229,9 +246,9 @@ const App = props => {
           <span className="hide-sm">
             <i
               onClick={() => {
-                setShowSearch(!showSearch)
+                setShowSearch(!showSearch);
                 setSearchTerm("");
-                setDisplayed([])
+                setDisplayed([]);
               }}
               style={{ cursor: "pointer" }}
               className="fas fa-search"
@@ -439,14 +456,15 @@ const App = props => {
             {using.map(used => (
               <div
                 className="ingItem"
-                onClick={handleClick("using")}
                 style={{
+                  backgroundColor: `${isMustHave(used)}`,
                   color: "white",
                   minWidth: "50px"
                 }}
               >
-                {`${used} `}
+                <p onClick={handleMustHave("musthave")}>{`${used} `}</p>
                 <i
+                  onClick={handleClick("using")}
                   class="fas fa-times"
                   style={{
                     color: "white",
@@ -457,8 +475,36 @@ const App = props => {
               </div>
             ))}
           </div>
+          {mustHave.length > 0 && (
+            <div className="usingContent">
+              <div style={{ width: "100%" }}>
+                <p>Cocktails must have: </p>
+              </div>
+              {mustHave.map(used => (
+                <div
+                  className="ingItem"
+                  onClick={handleMustHave("musthave")}
+                  style={{
+                    backgroundColor: `${isMustHave(used)}`,
+                    color: "white",
+                    minWidth: "50px"
+                  }}
+                >
+                  <p>{`${used} `}</p>
+                  {/* <i
+                    class="fas fa-times"
+                    style={{
+                      color: "white",
+                      marginLeft: "5px",
+                      marginTop: "1px"
+                    }}
+                  ></i> */}
+                </div>
+              ))}
+            </div>
+          )}
           <div className="drinkSection">
-            {drinks
+            {filterResultsByMustHave(drinks)
               .filter(drink => drink.rank > 1)
               .map(drink => (
                 <div

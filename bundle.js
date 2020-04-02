@@ -221,10 +221,15 @@ var App = function App(props) {
       searchType = _useState16[0],
       setSearchType = _useState16[1];
 
-  var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(["Rum", "Gin", "Water", "Salt", "Ice", "Sugar", "Food Coloring", "Brandy", "Orange Juice", "Orange", "Tonic Water", "Club Soda", "Vodka"]),
+  var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState18 = _slicedToArray(_useState17, 2),
-      using = _useState18[0],
-      setUsing = _useState18[1]; //attempting to make ingredient search a thing
+      mustHave = _useState18[0],
+      setMustHave = _useState18[1];
+
+  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(["Rum", "Gin", "Water", "Salt", "Ice", "Sugar", "Food Coloring", "Brandy", "Orange Juice", "Orange", "Tonic Water", "Club Soda", "Vodka"]),
+      _useState20 = _slicedToArray(_useState19, 2),
+      using = _useState20[0],
+      setUsing = _useState20[1]; //attempting to make ingredient search a thing
 
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
@@ -259,19 +264,26 @@ var App = function App(props) {
     return count;
   };
 
+  var isMustHave = function isMustHave(item) {
+    return mustHave.includes(item.toLowerCase().trim()) ? "#50" : "#4CA64C";
+  };
+
   var parseImg = function parseImg(str) {
     var input = str.toLowerCase().split(" ").join("%20");
     return "https://www.thecocktaildb.com/images/ingredients/".concat(input, "-Small.png");
   };
 
-  var allPossibleCombos = function allPossibleCombos(list) {
-    return list.reduce(function (subsets, value) {
-      return subsets.concat(subsets.map(function (set) {
-        return [value].concat(_toConsumableArray(set));
-      }));
-    }, [[]]).slice(1).map(function (set) {
-      return parseUsing(set);
+  var filterResultsByMustHave = function filterResultsByMustHave(cocktails) {
+    var result = cocktails;
+    var mustHaveList = mustHave.map(function (item) {
+      return item.toLowerCase();
     });
+    mustHaveList.forEach(function (item) {
+      result = result.filter(function (drink) {
+        return drink.using.includes(item);
+      });
+    });
+    return result;
   };
 
   var handleChange = function handleChange(field) {
@@ -315,16 +327,34 @@ var App = function App(props) {
     }).join(",");
   };
 
+  var handleMustHave = function handleMustHave(field) {
+    var dranks = drinks;
+    return function (e) {
+      if (mustHave.map(function (used) {
+        return used.toLowerCase();
+      }).includes(e.target.textContent.toLowerCase().trim())) {
+        setMustHave(mustHave.filter(function (used) {
+          return used.toLowerCase().trim() !== e.target.textContent.toLowerCase().trim();
+        }));
+      } else {
+        setMustHave([].concat(_toConsumableArray(mustHave), [e.target.textContent.toLowerCase().trim()]));
+      }
+    };
+  };
+
   var handleClick = function handleClick(field) {
     return function (e) {
       if (using.map(function (used) {
         return used.toLowerCase();
-      }).includes(e.target.textContent.toLowerCase().trim())) {
+      }).includes(e.target.parentElement.textContent.toLowerCase().trim())) {
         setUsing(using.filter(function (used) {
-          return used.toLowerCase().trim() !== event.target.textContent.toLowerCase().trim();
+          return used.toLowerCase().trim() !== e.target.parentElement.textContent.toLowerCase().trim();
+        }));
+        setMustHave(mustHave.filter(function (used) {
+          return used.toLowerCase().trim() !== e.target.textContent.toLowerCase().trim();
         }));
         var prevUsing = using.filter(function (used) {
-          return used !== event.target.textContent;
+          return used !== e.target.parentElement.textContent;
         });
         var baseDrinks = Object.values(props.coc).filter(function (drink) {
           return drink.liqueur !== true && drink.alcoholic;
@@ -336,10 +366,10 @@ var App = function App(props) {
           return a.using.length - a.rank - (b.using.length - b.rank);
         })); // setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
       } else {
-        setUsing([].concat(_toConsumableArray(using), [e.target.textContent]));
+        setUsing([].concat(_toConsumableArray(using), [e.target.parentElement.textContent]));
         setSearchTerm("");
 
-        var _prevUsing = [].concat(_toConsumableArray(using), [e.target.textContent]);
+        var _prevUsing = [].concat(_toConsumableArray(using), [e.target.parentElement.textContent]);
 
         var _baseDrinks = Object.values(props.coc).filter(function (drink) {
           return drink.liqueur !== true && drink.alcoholic;
@@ -559,12 +589,15 @@ var App = function App(props) {
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Your virtual shelf is stocked with:")), using.map(function (used) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "ingItem",
-      onClick: handleClick("using"),
       style: {
+        backgroundColor: "".concat(isMustHave(used)),
         color: "white",
         minWidth: "50px"
       }
-    }, "".concat(used, " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      onClick: handleMustHave("musthave")
+    }, "".concat(used, " ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      onClick: handleClick("using"),
       "class": "fas fa-times",
       style: {
         color: "white",
@@ -572,9 +605,25 @@ var App = function App(props) {
         marginTop: "1px"
       }
     }));
+  })), mustHave.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "usingContent"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    style: {
+      width: "100%"
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Cocktails must have: ")), mustHave.map(function (used) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "ingItem",
+      onClick: handleMustHave("musthave"),
+      style: {
+        backgroundColor: "".concat(isMustHave(used)),
+        color: "white",
+        minWidth: "50px"
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "".concat(used, " ")));
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "drinkSection"
-  }, drinks.filter(function (drink) {
+  }, filterResultsByMustHave(drinks).filter(function (drink) {
     return drink.rank > 1;
   }).map(function (drink) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
