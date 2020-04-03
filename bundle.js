@@ -265,7 +265,7 @@ var App = function App(props) {
   };
 
   var isMustHave = function isMustHave(item) {
-    return mustHave.includes(item.toLowerCase().trim()) ? "#50" : "#4CA64C";
+    return mustHave.includes(item.toLowerCase().trim()) ? "#fca103" : "#4CA64C";
   };
 
   var parseImg = function parseImg(str) {
@@ -632,6 +632,7 @@ var App = function App(props) {
         setSelectedDrink(drink);
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Item__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      mustHave: mustHave,
       using: using,
       key: drink.name,
       drink: drink
@@ -832,8 +833,15 @@ var Item = /*#__PURE__*/function (_Component) {
   }
 
   _createClass(Item, [{
+    key: "_isMustHave",
+    value: function _isMustHave(item) {
+      return this.props.mustHave.includes(item.toLowerCase().trim()) ? "#fca103" : "#4CA64C";
+    }
+  }, {
     key: "renderIngredients",
     value: function renderIngredients(drink) {
+      var _this = this;
+
       var adjustedProps = this.props.using.map(function (word) {
         return word.toLowerCase();
       });
@@ -846,7 +854,7 @@ var Item = /*#__PURE__*/function (_Component) {
         }, adjustedProps.includes(ing.toLowerCase()) ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "box arrow-right",
           style: {
-            backgroundColor: "#4CA64C"
+            backgroundColor: "".concat(_this._isMustHave(ing))
           }
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "ingredientName",

@@ -6,6 +6,9 @@ class Item extends Component {
     // this.state = { drink: null, error: null, isLoaded: false };
     // this.ingredientList = this.ingredientList.bind(this)
   }
+  _isMustHave(item) {
+    return this.props.mustHave.includes(item.toLowerCase().trim()) ? "#fca103" : "#4CA64C";
+  }
   renderIngredients(drink){
     let adjustedProps = this.props.using.map(word => word.toLowerCase());
     let filtered = drink.using.filter(ing => ing !== '');
@@ -16,7 +19,7 @@ class Item extends Component {
               <Fragment>
                 <div
                   className="box arrow-right"
-                  style={{ backgroundColor: "#4CA64C" }}
+                  style={{ backgroundColor: `${this._isMustHave(ing)}` }}
                 ></div>
 
                 <div

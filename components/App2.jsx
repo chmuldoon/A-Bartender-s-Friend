@@ -60,7 +60,7 @@ const App = props => {
     return count
   }
   const isMustHave = item => {
-    return mustHave.includes(item.toLowerCase().trim()) ? "#50" : "#4CA64C"
+    return mustHave.includes(item.toLowerCase().trim()) ? "#fca103" : "#4CA64C";
   }
   const parseImg = str => {
     let input = str.toLowerCase().split(" ").join("%20") 
@@ -513,7 +513,7 @@ const App = props => {
                     setSelectedDrink(drink);
                   }}
                 >
-                  <Item using={using} key={drink.name} drink={drink} />
+                  <Item mustHave={mustHave} using={using} key={drink.name} drink={drink} />
                 </div>
               ))}
           </div>
