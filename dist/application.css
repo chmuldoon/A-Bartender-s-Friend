@@ -143,7 +143,7 @@ html {
 }
 .searchInput {
   /* width: 90%; */
-  border-radius: 15px;
+  border-radius: 5px;
   height: 40px;
   border: 1px solid #3d3d3d;
   margin-right: 10px;
@@ -215,11 +215,11 @@ div.searchItem:hover {
 
 }
 .searchType{
-  height: 20px;
-  width: 90%;
-  margin-left: 5px;
+  height: 15px;
+  width: 95%;
+  /* margin-left: 5px; */
   margin-top: -15px;
-  border-radius: 15px;
+  border-radius: 5px;
   border: 1px solid black;
   display: flex;
   justify-content: center;
@@ -231,16 +231,16 @@ div.searchItem:hover {
   width: 50%;
   display: flex;
   justify-content: center;
-  padding-top: 4px;
+  /* padding-top: 4px; */
 }
 .searchTypeRight{
-  border-bottom-right-radius: 15px;
-  border-top-right-radius: 15px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
 
 }
 .searchTypeLeft{
-  border-bottom-left-radius: 15px;
-  border-top-left-radius: 15px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
 
 }
 
@@ -510,14 +510,14 @@ div.searchItem:hover {
     width: 100%;
   }
   .usingContent {
-    margin-top: 70px;
-    margin-bottom: 40px;
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
   .fa-search {
     float: left;
   }
   .content {
-    margin: 0;
+    margin-top: 60;
     width: 100%;
   }
   .drinkCard {
@@ -558,12 +558,12 @@ div.searchItem:hover {
   }
   .searchTypeRight,
   .searchTypeLeft {
-    padding-top: 8px
+    /* padding-top: 8px */
   }
   .searchType{
     margin-left: 0;
     width: 86%;
-    height: 30px;
+    height: 15px;
   }
   
 }

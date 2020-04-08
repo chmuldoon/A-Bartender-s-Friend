@@ -226,7 +226,7 @@ var App = function App(props) {
       mustHave = _useState18[0],
       setMustHave = _useState18[1];
 
-  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(["Rum", "Gin", "Water", "Salt", "Ice", "Sugar", "Food Coloring", "Brandy", "Orange Juice", "Orange", "Tonic Water", "Club Soda", "Vodka"]),
+  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(["Gin", "Water", "Salt", "Ice", "Sugar", "Food Coloring", "Brandy", "Orange Juice", "Orange", "Tonic Water", "Club Soda", "Vodka"]),
       _useState20 = _slicedToArray(_useState19, 2),
       using = _useState20[0],
       setUsing = _useState20[1]; //attempting to make ingredient search a thing
@@ -346,15 +346,15 @@ var App = function App(props) {
     return function (e) {
       if (using.map(function (used) {
         return used.toLowerCase();
-      }).includes(e.target.parentElement.textContent.toLowerCase().trim())) {
+      }).includes(e.target.textContent.toLowerCase().trim())) {
         setUsing(using.filter(function (used) {
-          return used.toLowerCase().trim() !== e.target.parentElement.textContent.toLowerCase().trim();
+          return used.toLowerCase().trim() !== e.target.textContent.toLowerCase().trim();
         }));
         setMustHave(mustHave.filter(function (used) {
           return used.toLowerCase().trim() !== e.target.textContent.toLowerCase().trim();
         }));
         var prevUsing = using.filter(function (used) {
-          return used !== e.target.parentElement.textContent;
+          return used !== e.target.textContent;
         });
         var baseDrinks = Object.values(props.coc).filter(function (drink) {
           return drink.liqueur !== true && drink.alcoholic;
@@ -366,10 +366,11 @@ var App = function App(props) {
           return a.using.length - a.rank - (b.using.length - b.rank);
         })); // setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
       } else {
-        setUsing([].concat(_toConsumableArray(using), [e.target.parentElement.textContent]));
+        setUsing([].concat(_toConsumableArray(using), [e.target.textContent]));
         setSearchTerm("");
+        setDisplayed([]);
 
-        var _prevUsing = [].concat(_toConsumableArray(using), [e.target.parentElement.textContent]);
+        var _prevUsing = [].concat(_toConsumableArray(using), [e.target.textContent]);
 
         var _baseDrinks = Object.values(props.coc).filter(function (drink) {
           return drink.liqueur !== true && drink.alcoholic;
@@ -586,7 +587,7 @@ var App = function App(props) {
     style: {
       width: "100%"
     }
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Your virtual shelf is stocked with:")), using.map(function (used) {
+  }, using.length === 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Your virtual shelf is empty. Please search and add some ingredients.") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Your virtual shelf is stocked with:")), using.map(function (used) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "ingItem",
       style: {
@@ -624,7 +625,7 @@ var App = function App(props) {
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "drinkSection"
   }, filterResultsByMustHave(drinks).filter(function (drink) {
-    return drink.rank > 1;
+    return drink.rank > 0;
   }).map(function (drink) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       onClick: function onClick() {

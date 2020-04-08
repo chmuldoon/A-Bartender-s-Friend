@@ -21,13 +21,14 @@ class Item extends Component {
                   className="box arrow-right"
                   style={{ backgroundColor: `${this._isMustHave(ing)}` }}
                 ></div>
-
+              
                 <div
                   className="ingredientName"
                   style={{ backgroundColor: "grey", color: "white" }}
                 >
                   {ing.toUpperCase()}
                 </div>
+
               </Fragment>
             ) : (
               <Fragment>

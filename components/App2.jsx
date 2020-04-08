@@ -17,7 +17,6 @@ const App = props => {
 
   const [mustHave, setMustHave] = useState([])
   const [using, setUsing] = useState([
-    "Rum", 
     "Gin", 
     "Water", 
     "Salt", 
@@ -123,12 +122,12 @@ const App = props => {
   }
   const handleClick = field => {
     return e => {
-      if (using.map(used => used.toLowerCase()).includes(e.target.parentElement.textContent.toLowerCase().trim())) {
+      if (using.map(used => used.toLowerCase()).includes(e.target.textContent.toLowerCase().trim())) {
         setUsing(
           using.filter(
             used =>
               used.toLowerCase().trim() !==
-              e.target.parentElement.textContent.toLowerCase().trim()
+              e.target.textContent.toLowerCase().trim()
           )
         );
         setMustHave(
@@ -138,7 +137,7 @@ const App = props => {
               e.target.textContent.toLowerCase().trim()
           )
         );
-        let prevUsing = using.filter(used => used !== e.target.parentElement.textContent);
+        let prevUsing = using.filter(used => used !== e.target.textContent);
         let baseDrinks = Object.values(props.coc).filter(
           drink => drink.liqueur !== true && drink.alcoholic
         );
@@ -150,9 +149,10 @@ const App = props => {
 
 
       } else {
-        setUsing([...using, e.target.parentElement.textContent]);
+        setUsing([...using, e.target.textContent]);
         setSearchTerm("")
-        let prevUsing = [...using, e.target.parentElement.textContent];
+        setDisplayed([])
+        let prevUsing = [...using, e.target.textContent];
         let baseDrinks = Object.values(props.coc).filter(
           drink => drink.liqueur !== true && drink.alcoholic
         );
@@ -187,7 +187,7 @@ const App = props => {
                     <div
                       className="searchTypeLeft"
                       style={{
-                        backgroundColor: "#4CA64C"
+                        backgroundColor: "#4CA64C",
                       }}
                     >
                       Drinks
@@ -203,7 +203,7 @@ const App = props => {
                       style={{
                         backgroundColor: "white",
                         color: "black",
-                        padding: "1px #4CA64C"
+                        padding: "1px #4CA64C",
                       }}
                     >
                       Drinks
@@ -215,7 +215,7 @@ const App = props => {
                       style={{
                         backgroundColor: "#4CA64C",
                         fontSize: "12px",
-                        fontWeight: "400"
+                        fontWeight: "400",
                       }}
                     >
                       Ingredients
@@ -233,7 +233,7 @@ const App = props => {
                         color: "black",
 
                         fontSize: "12px",
-                        fontWeight: "400"
+                        fontWeight: "400",
                       }}
                     >
                       Ingredients
@@ -288,7 +288,7 @@ const App = props => {
                 marginTop: "10px",
                 color: "white",
                 cursor: "pointer",
-                float: "right"
+                float: "right",
               }}
             ></i>
           </div>
@@ -298,7 +298,7 @@ const App = props => {
                 <div
                   className="searchTypeLeft"
                   style={{
-                    backgroundColor: "#4CA64C"
+                    backgroundColor: "#4CA64C",
                   }}
                 >
                   Drinks
@@ -314,7 +314,7 @@ const App = props => {
                   style={{
                     backgroundColor: "white",
                     color: "black",
-                    padding: "1px #4CA64C"
+                    padding: "1px #4CA64C",
                   }}
                 >
                   Drinks
@@ -326,7 +326,7 @@ const App = props => {
                   style={{
                     backgroundColor: "#4CA64C",
                     fontSize: "12px",
-                    fontWeight: "400"
+                    fontWeight: "400",
                   }}
                 >
                   Ingredients
@@ -344,7 +344,7 @@ const App = props => {
                     color: "black",
 
                     fontSize: "12px",
-                    fontWeight: "400"
+                    fontWeight: "400",
                   }}
                 >
                   Ingredients
@@ -359,7 +359,7 @@ const App = props => {
       <span className="show-sm">
         <div className="sideBar">
           {searchType === "drinks" &&
-            displayed.map(drink => {
+            displayed.map((drink) => {
               return (
                 <Fragment>
                   <div
@@ -378,7 +378,7 @@ const App = props => {
               );
             })}
           {searchType === "ingredients" &&
-            displayed.map(ing => {
+            displayed.map((ing) => {
               return (
                 <Fragment>
                   {using.includes(ing) ? (
@@ -404,7 +404,7 @@ const App = props => {
         {showSearch && (
           <div className="sideBar">
             {searchType === "drinks" &&
-              displayed.map(drink => {
+              displayed.map((drink) => {
                 return (
                   <Fragment>
                     <div
@@ -423,7 +423,7 @@ const App = props => {
                 );
               })}
             {searchType === "ingredients" &&
-              displayed.map(ing => {
+              displayed.map((ing) => {
                 return (
                   <Fragment>
                     {using.includes(ing) ? (
@@ -450,16 +450,21 @@ const App = props => {
         )}
         <div className="content">
           <div className="usingContent">
+            {}
             <div style={{ width: "100%" }}>
-              <p>Your virtual shelf is stocked with:</p>
+              {using.length === 0 ? (
+                <p>Your virtual shelf is empty. Please search and add some ingredients.</p>
+              ) : (
+                <p>Your virtual shelf is stocked with:</p>
+              )}
             </div>
-            {using.map(used => (
+            {using.map((used) => (
               <div
                 className="ingItem"
                 style={{
                   backgroundColor: `${isMustHave(used)}`,
                   color: "white",
-                  minWidth: "50px"
+                  minWidth: "50px",
                 }}
               >
                 <p onClick={handleMustHave("musthave")}>{`${used} `}</p>
@@ -469,7 +474,7 @@ const App = props => {
                   style={{
                     color: "white",
                     marginLeft: "5px",
-                    marginTop: "1px"
+                    marginTop: "1px",
                   }}
                 ></i>
               </div>
@@ -480,14 +485,14 @@ const App = props => {
               <div style={{ width: "100%" }}>
                 <p>Cocktails must have: </p>
               </div>
-              {mustHave.map(used => (
+              {mustHave.map((used) => (
                 <div
                   className="ingItem"
                   onClick={handleMustHave("musthave")}
                   style={{
                     backgroundColor: `${isMustHave(used)}`,
                     color: "white",
-                    minWidth: "50px"
+                    minWidth: "50px",
                   }}
                 >
                   <p>{`${used} `}</p>
@@ -505,15 +510,20 @@ const App = props => {
           )}
           <div className="drinkSection">
             {filterResultsByMustHave(drinks)
-              .filter(drink => drink.rank > 1)
-              .map(drink => (
+              .filter((drink) => drink.rank > 0)
+              .map((drink) => (
                 <div
                   onClick={() => {
                     toggleModal(!displayModal);
                     setSelectedDrink(drink);
                   }}
                 >
-                  <Item mustHave={mustHave} using={using} key={drink.name} drink={drink} />
+                  <Item
+                    mustHave={mustHave}
+                    using={using}
+                    key={drink.name}
+                    drink={drink}
+                  />
                 </div>
               ))}
           </div>
@@ -530,7 +540,7 @@ const App = props => {
           <div
             className="modal-child"
             style={{ display: "flex" }}
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
             }}
           >
@@ -542,7 +552,7 @@ const App = props => {
                     fontSize: "30px",
                     color: "white",
                     cursor: "pointer",
-                    marginBottom: "10px"
+                    marginBottom: "10px",
                   }}
                   onClick={() => {
                     toggleModal(!displayModal);
