@@ -122,22 +122,27 @@ const App = props => {
   }
   const handleClick = field => {
     return e => {
-      if (using.map(used => used.toLowerCase()).includes(e.target.textContent.toLowerCase().trim())) {
+      let text =
+        e.target.classList.value === "fas fa-times"
+          ? e.target.parentElement.textContent
+          : e.textContent;
+      if (using.map(used => used.toLowerCase()).includes(text.toLowerCase().trim())) {
         setUsing(
           using.filter(
             used =>
               used.toLowerCase().trim() !==
-              e.target.textContent.toLowerCase().trim()
+              text.toLowerCase().trim()
           )
         );
         setMustHave(
           mustHave.filter(
             used =>
               used.toLowerCase().trim() !==
-              e.target.textContent.toLowerCase().trim()
+              text.toLowerCase().trim()
           )
         );
-        let prevUsing = using.filter(used => used !== e.target.textContent);
+        debugger
+        let prevUsing = using.filter(used => used !== text);
         let baseDrinks = Object.values(props.coc).filter(
           drink => drink.liqueur !== true && drink.alcoholic
         );
@@ -149,10 +154,11 @@ const App = props => {
 
 
       } else {
-        setUsing([...using, e.target.textContent]);
+        debugger
+        setUsing([...using, text]);
         setSearchTerm("")
         setDisplayed([])
-        let prevUsing = [...using, e.target.textContent];
+        let prevUsing = [...using, text];
         let baseDrinks = Object.values(props.coc).filter(
           drink => drink.liqueur !== true && drink.alcoholic
         );
@@ -467,7 +473,7 @@ const App = props => {
                   minWidth: "50px",
                 }}
               >
-                <p onClick={handleMustHave("musthave")}>{`${used} `}</p>
+                <p onClick={handleMustHave("musthave")}>{`${used}`}</p>
                 <i
                   onClick={handleClick("using")}
                   class="fas fa-times"

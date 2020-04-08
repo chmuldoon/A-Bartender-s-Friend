@@ -344,17 +344,20 @@ var App = function App(props) {
 
   var handleClick = function handleClick(field) {
     return function (e) {
+      var text = e.target.classList.value === "fas fa-times" ? e.target.parentElement.textContent : e.textContent;
+
       if (using.map(function (used) {
         return used.toLowerCase();
-      }).includes(e.target.textContent.toLowerCase().trim())) {
+      }).includes(text.toLowerCase().trim())) {
         setUsing(using.filter(function (used) {
-          return used.toLowerCase().trim() !== e.target.textContent.toLowerCase().trim();
+          return used.toLowerCase().trim() !== text.toLowerCase().trim();
         }));
         setMustHave(mustHave.filter(function (used) {
-          return used.toLowerCase().trim() !== e.target.textContent.toLowerCase().trim();
+          return used.toLowerCase().trim() !== text.toLowerCase().trim();
         }));
+        debugger;
         var prevUsing = using.filter(function (used) {
-          return used !== e.target.textContent;
+          return used !== text;
         });
         var baseDrinks = Object.values(props.coc).filter(function (drink) {
           return drink.liqueur !== true && drink.alcoholic;
@@ -366,11 +369,12 @@ var App = function App(props) {
           return a.using.length - a.rank - (b.using.length - b.rank);
         })); // setDrinks(baseDrinks.sort((a, b) => ((b.rank / b.using.length) * 100) - ((a.rank / a.using.length) * 100)));
       } else {
-        setUsing([].concat(_toConsumableArray(using), [e.target.textContent]));
+        debugger;
+        setUsing([].concat(_toConsumableArray(using), [text]));
         setSearchTerm("");
         setDisplayed([]);
 
-        var _prevUsing = [].concat(_toConsumableArray(using), [e.target.textContent]);
+        var _prevUsing = [].concat(_toConsumableArray(using), [text]);
 
         var _baseDrinks = Object.values(props.coc).filter(function (drink) {
           return drink.liqueur !== true && drink.alcoholic;
@@ -597,7 +601,7 @@ var App = function App(props) {
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
       onClick: handleMustHave("musthave")
-    }, "".concat(used, " ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    }, "".concat(used)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       onClick: handleClick("using"),
       "class": "fas fa-times",
       style: {
