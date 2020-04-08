@@ -344,7 +344,8 @@ var App = function App(props) {
 
   var handleClick = function handleClick(field) {
     return function (e) {
-      var text = e.target.classList.value === "fas fa-times" ? e.target.parentElement.textContent : e.textContent;
+      var text = e.target.classList.value === "fas fa-times" ? e.target.parentElement.textContent : e.target.textContent;
+      debugger;
 
       if (using.map(function (used) {
         return used.toLowerCase();

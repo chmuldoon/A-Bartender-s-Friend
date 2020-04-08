@@ -125,7 +125,8 @@ const App = props => {
       let text =
         e.target.classList.value === "fas fa-times"
           ? e.target.parentElement.textContent
-          : e.textContent;
+          : e.target.textContent;
+          debugger
       if (using.map(used => used.toLowerCase()).includes(text.toLowerCase().trim())) {
         setUsing(
           using.filter(
